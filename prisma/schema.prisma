@@ -1,0 +1,94 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Status {
+  DENIED
+  PENDING
+  APPROVED
+}
+
+enum TradeCall {
+  BUY
+  SELL
+}
+
+// model SuperUser {
+//   id    Int     @id @default(autoincrement())
+//   email String  @unique
+//   users Users[]
+// }
+
+// model Users {
+//   id                Int           @id @default(autoincrement())
+//   first_name        String
+//   last_name         String
+//   email             String        @unique
+//   clerkId           String
+//   verified          Boolean       @default(false)
+//   createdAt         DateTime      @default(now())
+//   deposits          Deposits[]
+//   withdrawals       Withdrawals[]
+//   Trades            Trades[]
+//   // superUser         SuperUser     @relation(fields: [supperUserId], references: [id])
+//   // supperUserId      Int
+//   balance           Float @default(0)
+//   profit            Float @default(0)
+//   avaliable_balance Float @default(0)
+// }
+
+model Withdrawals {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  method         String
+  wallet_address String?
+  amount         Float
+  status         Status   @default(PENDING)
+  // user           Users    @relation(fields: [userId], references: [id])
+  // userId         Int      @unique
+}
+
+// model Trades {
+//   id        Int       @id @default(autoincrement())
+//   createdAt DateTime  @default(now())
+//   amount    Float
+//   leverage  String
+//   profit    Float
+//   commodity String
+//   status    Status    @default(PENDING)
+//   call      TradeCall
+//   user      Users     @relation(fields: [userId], references: [id])
+//   userId    Int
+// }
+
+model Deposits {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  method    String
+  prove     String
+  // user      Users    @relation(fields: [userId], references: [id])
+  // userId    Int      @unique
+  status    Status   @default(PENDING)
+  createdAt DateTime @default(now())
+  remarks   String
+}
+
+model Transactions {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  type      String
+  status    Status   @default(PENDING)
+  createdAt DateTime @default(now())
+  remarks   String
+}
+
+// model Subscriptions {
+
+// }
