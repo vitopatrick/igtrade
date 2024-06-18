@@ -62,7 +62,7 @@ const DepositForm = () => {
 
     // return clean up function
     return () => subscription.unsubscribe();
-  }, [selected, form.watch("method")]);
+  }, [selected, form.watch("method"), form]);
 
   // copy address
   const copyAddress = (address: string) => {
