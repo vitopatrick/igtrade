@@ -28,35 +28,25 @@ async function createUser(userData: userData) {
     return error;
   }
 }
-// update user
-async function updateUser() {}
-
-// Delete user
-async function deleteUser() {}
 
 // Get user
 async function getUser(id: string | any) {
   try {
-    return await prisma.users.findFirst({
+    let user = await prisma.users.findUnique({
       where: {
         clerkId: id,
       },
-      select: {
-        deposits: true,
+      include: {
         transactions: true,
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        revenue: true,
-        profit: true,
-        trading_bonus: true,
         chartData: true,
+        deposits: true,
       },
     });
+
+    return user;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }
 
-export { createUser, updateUser, deleteUser, getUser };
+export { createUser, getUser };

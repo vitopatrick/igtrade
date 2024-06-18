@@ -1,18 +1,29 @@
+import { getWithdrawals } from "@/actions/withdrawal";
 import EmptyState from "@/components/empty-state/EmptyState";
 import { WithdrawalFaq } from "@/components/withdrawals/WithdrawalFaq";
 import WithdrawalForm from "@/components/withdrawals/WithdrawalForm";
 import WithdrawalsList from "@/components/withdrawals/WithdrawalsList";
+import { currentUser } from "@clerk/nextjs/server";
 import React from "react";
 
-const WithdrawalsPage = () => {
+const WithdrawalsPage = async () => {
+  const auth: any = await currentUser();
+
+  const withdrawals: any = await getWithdrawals(auth?.id);
+
+  console.log(withdrawals);
+
   return (
     <div>
-      <div className="flex flex-col lg:flex-row gap-4 items-center">
+      <div className="flex flex-col lg:flex-row gap-4 items-center w-full">
         <WithdrawalForm />
         <WithdrawalFaq />
       </div>
-      {/* <WithdrawalsList /> */}
-      <EmptyState />
+      {withdrawals.length < 1 ? (
+        <EmptyState />
+      ) : (
+        <WithdrawalsList data={withdrawals} />
+      )}
     </div>
   );
 };

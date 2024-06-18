@@ -25,6 +25,9 @@ import {
 } from "../ui/select";
 import { makeDeposit } from "@/actions/deposit";
 import { useAuth } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { addresses } from "@/lib/address";
+import { CopyIcon } from "lucide-react";
 
 const DepositForm = () => {
   const form = useForm<z.infer<typeof depositFormSchema>>({
@@ -39,11 +42,32 @@ const DepositForm = () => {
   const auth = useAuth();
   const userId: string | any = auth.userId;
 
+  const selectAddress = form.watch("method");
+  const [selected, setSelected] = useState<any>();
+
   async function onSubmit(values: z.infer<typeof depositFormSchema>) {
     const returnText = await makeDeposit(values, userId);
 
     console.log(returnText);
   }
+
+  useEffect(() => {
+    // watch for change in the coin value
+    const subscription = form.watch((value) => {
+      const selectedCoin = addresses.find(
+        (address) => address.method === value.method
+      );
+      setSelected(selectedCoin);
+    });
+
+    // return clean up function
+    return () => subscription.unsubscribe();
+  }, [selected, form.watch("method")]);
+
+  // copy address
+  const copyAddress = (address: string) => {
+    navigator.clipboard.writeText(address);
+  };
 
   return (
     <div className="p-4 flex-1">
@@ -89,7 +113,9 @@ const DepositForm = () => {
                         <SelectGroup>
                           <SelectItem value="btc">Bitcoin</SelectItem>
                           <SelectItem value="eth">Ethereum</SelectItem>
-                          <SelectItem value="paypal">Paypal</SelectItem>
+                          <SelectItem value="usdt">USDT</SelectItem>
+                          <SelectItem value="trc20">USDT TRC20</SelectItem>
+                          {/* <SelectItem value="paypal">Paypal</SelectItem> */}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -98,6 +124,18 @@ const DepositForm = () => {
                 )}
               />
             </div>
+
+            {selected && (
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm my-2">Wallet Address</p>
+                  <p className="font-mono">{selected?.address}</p>
+                </div>
+
+                <CopyIcon onClick={() => copyAddress(selected.address)} />
+              </div>
+            )}
+
             {/* Deposit Remarks */}
             <div>
               <FormField

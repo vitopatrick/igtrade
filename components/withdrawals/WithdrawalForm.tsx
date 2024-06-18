@@ -13,34 +13,43 @@ import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
-import { depositFormSchema } from "@/lib/schemas";
+import { withdrawalSchema } from "@/lib/schemas";
 import { z } from "zod";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { createWithdrawals } from "@/actions/withdrawal";
+import { useAuth } from "@clerk/nextjs";
 
 const WithdrawalForm = () => {
-  const form = useForm<z.infer<typeof depositFormSchema>>({
-    resolver: zodResolver(depositFormSchema),
+  const auth: any = useAuth();
+
+  const form = useForm<z.infer<typeof withdrawalSchema>>({
+    resolver: zodResolver(withdrawalSchema),
     defaultValues: {
       amount: "",
       method: "",
       remarks: "",
+      address: "",
+      payPal: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof depositFormSchema>) {
-    console.log(values);
+  const method = form.watch("method");
+
+  const methods = ["btc", "eth"];
+
+  async function onSubmit(values: z.infer<typeof withdrawalSchema>) {
+     await createWithdrawals(values, auth.userId);
   }
 
   return (
-    <div className="p-4 flex-1">
+    <div className="p-4 lg:flex-1 w-full">
       <h3 className="my-4 text-xl underline">Withdrawal Form</h3>
       <div>
         <Form {...form}>
@@ -83,8 +92,8 @@ const WithdrawalForm = () => {
                         <SelectGroup>
                           <SelectItem value="btc">Bitcoin</SelectItem>
                           <SelectItem value="eth">Ethereum</SelectItem>
-                          <SelectItem value="eth">Bank Transfer</SelectItem>
-                          <SelectItem value="eth">Paypal</SelectItem>
+
+                          <SelectItem value="paypal">Paypal</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -93,11 +102,47 @@ const WithdrawalForm = () => {
                 )}
               />
             </div>
+            {/* Wallet Address */}
+            {methods.includes(method) && (
+              <div>
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Wallet Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Wallet Address..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+            {/* Paypal Name */}
+            {method == "paypal" && (
+              <div>
+                <FormField
+                  control={form.control}
+                  name="payPal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>PayPal Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="PayPal Name..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
             {/* Deposit Remarks */}
             <div>
               <FormField
                 control={form.control}
-                name="amount"
+                name="remarks"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Transaction Remarks</FormLabel>

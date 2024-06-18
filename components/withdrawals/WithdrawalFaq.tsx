@@ -52,11 +52,11 @@ const faqs = [
 
 export function WithdrawalFaq() {
   return (
-    <div className="flex-1">
+    <div className="flex-1 w-full">
       <h3 className="my-4 text-xl underline">Faq</h3>
       <Accordion type="single" collapsible className="w-full">
         {faqs.map((faq) => (
-          <AccordionItem value={faq.id.toString()}>
+          <AccordionItem value={faq.id.toString()} key={faq.id}>
             <AccordionTrigger>{faq.question}</AccordionTrigger>
             <AccordionContent>{faq.answer}</AccordionContent>
           </AccordionItem>

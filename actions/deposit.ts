@@ -23,23 +23,31 @@ async function makeDeposit(
   deposits: z.infer<typeof depositFormSchema>,
   clerkId: string
 ) {
-  try {
-    await prisma.deposits.create({
-      data: {
-        amount: +deposits.amount,
-        method: deposits.method,
-        remarks: deposits.remarks,
-        userId: clerkId,
-        prove: "",
-      },
-    });
+  await prisma.deposits.create({
+    data: {
+      amount: +deposits.amount,
+      method: deposits.method,
+      clerkId: clerkId,
+      status: "pending",
+      remarks: deposits.remarks,
+      prove: "",
+    },
+  });
 
-    revalidatePath("/dashboard/deposit");
+  await prisma.transactions.create({
+    data: {
+      amount: +deposits.amount,
+      type: "deposit",
+      clerkId: clerkId,
+      remarks: deposits.remarks,
+    },
+  });
 
-    return "Thank You ...";
-  } catch (error) {
-    return error;
-  }
+  revalidatePath("/dashboard/deposit");
+
+  return {
+    message: "Request Pending",
+  };
 }
 
 export { getDeposits, makeDeposit };

@@ -6,7 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 const TransactionsPage = async () => {
   const auth = await currentUser();
 
-  const user = await getUser(auth?.id);
+  const user: any = await getUser(auth?.id);
 
   const transactions: any = user?.transactions;
 

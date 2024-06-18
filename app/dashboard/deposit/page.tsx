@@ -17,7 +17,7 @@ const DepositPage = async () => {
         <DepositForm />
         <DepositFaq />
       </div>
-      {deposits?.length < 1 ? <EmptyState /> : <DepositList />}
+      {deposits?.length < 1 ? <EmptyState /> : <DepositList data={deposits} />}
     </div>
   );
 };

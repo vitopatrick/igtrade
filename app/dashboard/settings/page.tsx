@@ -8,8 +8,8 @@ const SettingsPage = () => {
         routing="hash"
         appearance={{
           elements: {
-            rootBox: "w-full",
-            cardBox: "w-full rounded-none shadow-none",
+            rootBox: "w-full ",
+            cardBox: "w-full   rounded-none shadow-none dark:text-white",
             headerTitle: "capitalize font-medium underline ",
             page: "rounded-none",
             userPreviewMainIdentifier: "uppercase",

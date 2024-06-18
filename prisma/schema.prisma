@@ -4,29 +4,16 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
-enum Status {
-  DENIED
-  PENDING
-  APPROVED
-}
-
-
-enum UserRole {
-  ADMIN
-  USER
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Users {
   id            Int            @id @default(autoincrement())
-  clerkId       String @unique
+  clerkId       String         @unique
   first_name    String
   last_name     String
-  email         String
+  email         String         @unique
   revenue       Int            @default(0)
   profit        Int            @default(0)
   trading_bonus Int            @default(0)
@@ -41,23 +28,23 @@ model Deposits {
   id        Int      @id @default(autoincrement())
   amount    Int
   createdAt DateTime @default(now())
-  status    Status   @default(PENDING)
+  status    String
   method    String
   remarks   String
   user      Users    @relation(fields: [clerkId], references: [clerkId])
-  clerkId    String
-  prove     String 
+  clerkId   String
+  prove     String
 }
 
 model Withdrawals {
   id        Int      @id @default(autoincrement())
   amount    Int
   createdAt DateTime @default(now())
-  status    Status   @default(PENDING)
+  status    String
   method    String
   remarks   String
   user      Users    @relation(fields: [clerkId], references: [clerkId])
-  clerkId    String
+  clerkId   String
 }
 
 model Transactions {
@@ -67,13 +54,13 @@ model Transactions {
   createdAt DateTime @default(now())
   amount    Int
   user      Users    @relation(fields: [clerkId], references: [clerkId])
-  clerkId    String
+  clerkId   String
 }
 
 model ChartData {
-  id     Int    @id @default(autoincrement())
-  profit Int
-  user   Users  @relation(fields: [clerkId], references: [clerkId])
+  id      Int    @id @default(autoincrement())
+  profit  Int
+  user    Users  @relation(fields: [clerkId], references: [clerkId])
   clerkId String
-  date   String
+  date    String
 }
