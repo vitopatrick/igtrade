@@ -17,7 +17,7 @@ import {
 
 export default function TransactionsList() {
   return (
-    <Card className="my-5 shadow-none border-none w-full col-span-2">
+    <Card className="my-5 shadow-sm border w-full col-span-2">
       <CardHeader className="px-7">
         <CardTitle className="text-2xl">Transactions</CardTitle>
         <CardDescription>

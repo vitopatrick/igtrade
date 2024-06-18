@@ -20,10 +20,11 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { makeDeposit } from "@/actions/deposit";
+import { useAuth } from "@clerk/nextjs";
 
 const DepositForm = () => {
   const form = useForm<z.infer<typeof depositFormSchema>>({
@@ -35,8 +36,13 @@ const DepositForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof depositFormSchema>) {
-    console.log(values);
+  const auth = useAuth();
+  const userId: string | any = auth.userId;
+
+  async function onSubmit(values: z.infer<typeof depositFormSchema>) {
+    const returnText = await makeDeposit(values, userId);
+
+    console.log(returnText);
   }
 
   return (
@@ -83,8 +89,7 @@ const DepositForm = () => {
                         <SelectGroup>
                           <SelectItem value="btc">Bitcoin</SelectItem>
                           <SelectItem value="eth">Ethereum</SelectItem>
-                          <SelectItem value="eth">Bank Transfer</SelectItem>
-                          <SelectItem value="eth">Paypal</SelectItem>
+                          <SelectItem value="paypal">Paypal</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -97,21 +102,22 @@ const DepositForm = () => {
             <div>
               <FormField
                 control={form.control}
-                name="amount"
+                name="remarks"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Transaction Remarks</FormLabel>
                     <FormControl>
                       <Input placeholder="First Deposit..." {...field} />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className="w-full block">
+              Submit
+            </Button>
           </form>
         </Form>
       </div>

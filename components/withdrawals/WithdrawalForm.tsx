@@ -104,14 +104,15 @@ const WithdrawalForm = () => {
                     <FormControl>
                       <Input placeholder="First Deposit..." {...field} />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className="w-full block">
+              Submit
+            </Button>
           </form>
         </Form>
       </div>

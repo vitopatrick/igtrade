@@ -1,10 +1,9 @@
-import BalanceCards from "@/components/balance-cards/Cards";
+import BonusCard from "@/components/balance-cards/Bonus";
+import DashboardCards from "@/components/balance-cards/DashboardCards";
+import TopAssets from "@/components/balance-cards/TopAssets";
 import { AccountSummaryChart } from "@/components/charts/AccountSummaryChart";
-import { currentUser } from "@clerk/nextjs/server";
 
 const WalletPage = async () => {
-  const signedInUser = await currentUser();
-
   return (
     <div>
       {/* header */}
@@ -12,9 +11,9 @@ const WalletPage = async () => {
 
       {/* Card sections */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 my-4">
-        <BalanceCards />
-        <BalanceCards />
-        <BalanceCards />
+        <DashboardCards />
+        <TopAssets />
+        <BonusCard />
       </div>
       {/* chart */}
       <div className="mt-[10%]">

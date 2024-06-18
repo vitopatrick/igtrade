@@ -1,7 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser, userData } from "@/actions/crud-users";
+import { createUser, userData } from "@/actions/user";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
 
-  let evt: WebhookEvent;
+  let evt: WebhookEvent | any;
 
   // Verify the payload with the headers
   try {
@@ -49,17 +49,23 @@ export async function POST(req: Request) {
     });
   }
 
-  // console.log(evt.data.email_addresses[0]);
+  // Do something with the payload
+  // For this guide, you simply log the payload to the console
+  const { id } = evt.data;
+  const eventType = evt.type;
+  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
+  console.log("Webhook body:", body);
 
-  const user: userData = {
+  const UserData: userData = {
+    clerkId: evt.data.id,
+    email: evt.data.email_addresses[0].email_address,
     first_name: evt.data.first_name,
-    last_name: evt.data?.last_name,
-    clerkId: evt.data?.id,
-    email: evt.data?.email_addresses[0].email_address,
+    last_name: evt.data.last_name,
   };
 
+  // create User
   if (evt.type === "user.created") {
-    await createUser(user);
+    await createUser(UserData);
   }
 
   return new Response("", { status: 200 });

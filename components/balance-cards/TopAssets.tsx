@@ -2,7 +2,7 @@ import { DollarSign } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function TopAssets() {
+export default function TopAssets({ amount = 0 }: any) {
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -10,8 +10,7 @@ export default function TopAssets() {
         <DollarSign className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">$0.00</div>
-        <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+        <div className="text-2xl font-bold">${amount}</div>
       </CardContent>
     </Card>
   );

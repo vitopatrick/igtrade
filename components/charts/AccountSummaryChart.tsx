@@ -2,54 +2,8 @@
 
 import { BarChart } from "@tremor/react";
 
-const chartData: any = [
-  {
-    date: "Jan 23",
-    Profit: 167,
-  },
-  {
-    date: "Feb 23",
-    Profit: 125,
-  },
-  {
-    date: "Mar 23",
-    Profit: 156,
-  },
-  {
-    date: "Apr 23",
-    Profit: 165,
-  },
-  {
-    date: "May 23",
-    Profit: 153,
-  },
-  {
-    date: "Jun 23",
-    Profit: 124,
-  },
-  {
-    date: "Jul 23",
-    Profit: 164,
-  },
-  {
-    date: "Aug 23",
-    Profit: 123,
-  },
-  {
-    date: "Sep 23",
-    Profit: 132,
-  },
-  {
-    date: "Sep 23",
-    Profit: 132,
-  },
-  {
-    date: "Sep 23",
-    Profit: 132,
-  },
-];
 
-export function AccountSummaryChart() {
+export function AccountSummaryChart({ chart }: any) {
   type CustomTooltipTypeBar = {
     payload: any;
     active: boolean | undefined;
@@ -81,7 +35,7 @@ export function AccountSummaryChart() {
     <>
       <BarChart
         className="mt-4 h-72"
-        data={chartData}
+        data={chart}
         index="date"
         categories={["Profit"]}
         colors={["blue"]}

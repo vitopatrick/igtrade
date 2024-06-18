@@ -4,7 +4,7 @@ import React from "react";
 const SignUpPage = () => {
   return (
     <div className="bg-gradient-to-r from-[#2C5364] via-[#203A43] to-[ #2C5364] h-screen">
-      <main className="mx-auto lg:w-[40%] translate-y-[10%] p-4">
+      <main className="mx-auto lg:w-[40%] p-4">
         <SignUp
           appearance={{
             elements: {

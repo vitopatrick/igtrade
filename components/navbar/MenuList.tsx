@@ -1,13 +1,6 @@
 import Link from "next/link";
 
-import {
-  Home,
-  Wallet,
-  DollarSign,
-  Cog,
-  Briefcase,
-  UploadCloud,
-} from "lucide-react";
+import { Home, Wallet, DollarSign, Cog, UploadCloud } from "lucide-react";
 import { StackIcon } from "@radix-ui/react-icons";
 
 const sideMenuLinks = [
@@ -32,7 +25,7 @@ const sideMenuLinks = [
   {
     id: 4,
     href: "/dashboard/deposit",
-    icon: <Briefcase className="h-4 w-4" />,
+    icon: <StackIcon className="h-4 w-4" />,
     title: "Fund Account",
   },
   {

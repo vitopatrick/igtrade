@@ -16,6 +16,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
+import { ModeToggle } from "../navbar/Toggle";
 
 const DashboardHeader = () => {
   const pathname = usePathname();
@@ -34,7 +35,7 @@ const DashboardHeader = () => {
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1">
-        {/* <h4 className="uppercase tracking-widest">{page_title}</h4> */}
+        <ModeToggle />
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
