@@ -24,6 +24,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tremor/react": "^3.17.2",
+    "@xata.io/client": "^0.0.0-next.v0b9131efdfa1340c28d4ce9bd73d6c4854e7c140",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",

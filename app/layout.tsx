@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Josefin_Sans } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@/provider/ThemProvider";
 
-const js = Josefin_Sans({ subsets: ["latin"] });
+const sans = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Trading Platform",
@@ -19,16 +18,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={js.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
+        <body className={sans.className}>{children}</body>
       </html>
     </ClerkProvider>
   );

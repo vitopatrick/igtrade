@@ -14,7 +14,7 @@ const TransactionsPage = async () => {
     <div>
       <div>
         {/* transactions list */}
-        {transactions.length < 1 ? <EmptyState /> : <TransactionsList />}
+        {transactions?.length < 1 ? <EmptyState /> : <TransactionsList />}
       </div>
     </div>
   );

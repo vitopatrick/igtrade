@@ -14,6 +14,8 @@ export default async function Dashboard() {
 
   const transactions: any = user?.transactions;
 
+  console.log(user);
+
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
       <div>
@@ -31,7 +33,7 @@ export default async function Dashboard() {
       <TradingChart chart={user?.chartData} />
 
       {/* transactions list */}
-      {transactions.length < 1 ? <EmptyState /> : <TransactionsList />}
+      {transactions?.length < 1 ? <EmptyState /> : <TransactionsList />}
     </div>
   );
 }
