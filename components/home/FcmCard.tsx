@@ -44,8 +44,8 @@ const FcmCard = () => {
               <div className="text-center bg-cyan-800 text-white p-4">
                 {link.title}
               </div>
-              <div>
-                <img src={link.img} alt={link.title} />
+              <div className="w-full">
+                <img src={link.img} alt={link.title} className="w-full" />
               </div>
             </div>
           ))}
