@@ -10,7 +10,7 @@ const Hero = () => {
       }}
     >
       <div className="pt-6">
-        <h4 className="lg:text-6xl font-semibold text-center text-white">
+        <h4 className="text-4xl lg:text-6xl font-semibold text-center text-white break-words">
           Over a Century of Futures Expertise
         </h4>
       </div>
