@@ -10,7 +10,6 @@ const connectionString = `${process.env.DATABASE_URL}`;
 
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);
-// const prisma = new PrismaClient({ adapter });
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 
 export { prisma };
