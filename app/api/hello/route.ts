@@ -1,19 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-type ResponseData = {
-  message: string;
-  data: any;
-};
-
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    return res.status(200).json({
-      message: "Hello from Next.js!",
-      data: process.env.WEBHOOK_SECRET,
-    });
+    return res.status(200).json({ key: process.env.WEBHOOK_SECRET });
+  } else {
+    return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
-    
 }
