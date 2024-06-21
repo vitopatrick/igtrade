@@ -6,9 +6,8 @@ import EmptyState from "@/components/empty-state/EmptyState";
 import { currentUser } from "@clerk/nextjs/server";
 
 const DepositPage = async () => {
-  const auth: any = await currentUser();
-  const id = auth.id;
-
+  // const auth: any = await currentUser();
+  // const id = auth.id;
 
   return (
     <div>
