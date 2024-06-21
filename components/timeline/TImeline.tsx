@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Chrono } from "react-chrono";
+import { CardTitle } from "../ui/card";
 
 const Timeline = () => {
   const items = [
@@ -284,7 +285,17 @@ const Timeline = () => {
 
   return (
     <div>
-      <Chrono items={items} mode="VERTICAL_ALTERNATING" hideControls={true} />
+      <Chrono
+        items={items}
+        mode="VERTICAL_ALTERNATING"
+        hideControls={true}
+        theme={{
+          primary: "black",
+          CardTitle: "black",
+          titleColor: "black",
+          titleColorActive: "black",
+        }}
+      />
     </div>
   );
 };
