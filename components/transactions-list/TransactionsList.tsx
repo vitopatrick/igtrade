@@ -23,6 +23,8 @@ export default async function TransactionsList() {
 
   const transactions: any = await getTransactions(auth?.id);
 
+  console.log(transactions);
+
   return (
     <Card className="my-5 shadow-sm border w-full col-span-2">
       <CardHeader className="px-7">
@@ -42,23 +44,24 @@ export default async function TransactionsList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions.map((transaction: any, index: number) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <div className="font-medium">{transaction.remarks}</div>
-                </TableCell>
-                <TableCell className="hidden sm:table-cell">
-                  {transaction.type}
-                </TableCell>
+            {/* {transactions &&
+              transactions.map((transaction: any, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <div className="font-medium">{transaction.remarks}</div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    {transaction.type}
+                  </TableCell>
 
-                <TableCell className="hidden md:table-cell">
-                  {formatDate(transaction.createdAt)}
-                </TableCell>
-                <TableCell className="text-right">
-                  ${transaction.amount}
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell className="hidden md:table-cell">
+                    {formatDate(transaction.createdAt)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    ${transaction.amount}
+                  </TableCell>
+                </TableRow>
+              ))} */}
           </TableBody>
         </Table>
       </CardContent>

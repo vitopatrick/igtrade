@@ -2,13 +2,15 @@ import Footer from "@/components/home/Footer";
 import Hero from "@/components/home/Hero";
 import NavigationBar from "@/components/home/Nabar";
 import Services from "@/components/home/Services";
+import { connectDb } from "@/lib/db";
 
-const Home = () => {
+const Home = async () => {
+  console.log(await connectDb());
+
   return (
     <>
       <NavigationBar />
       <Hero />
-
       <Services />
       <Footer />
     </>

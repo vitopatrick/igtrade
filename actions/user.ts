@@ -1,6 +1,7 @@
 "use server";
 
-import { prisma } from "@/prisma/script";
+import { connectDb } from "@/lib/db";
+import User from "@/lib/models/User.Model";
 
 export type userData = {
   first_name: string;
@@ -12,18 +13,13 @@ export type userData = {
 // create user
 async function createUser(userData: userData) {
   try {
-    await prisma.users.create({
-      data: {
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        email: userData.email,
-        clerkId: userData.clerkId,
-      },
-    });
+    await connectDb();
 
-    return {
-      message: "Successful",
-    };
+    const newUser = new User(userData);
+
+    await newUser.save();
+
+    console.log("Saved");
   } catch (error) {
     return error;
   }
@@ -32,16 +28,9 @@ async function createUser(userData: userData) {
 // Get user
 async function getUser(id: string | any) {
   try {
-    let user = await prisma.users.findUnique({
-      where: {
-        clerkId: id,
-      },
-      include: {
-        transactions: true,
-        chartData: true,
-        deposits: true,
-      },
-    });
+    await connectDb();
+
+    const user = await User.findOne({ clerkId: id });
 
     return user;
   } catch (error) {

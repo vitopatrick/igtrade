@@ -9,7 +9,6 @@ const DepositPage = async () => {
   const auth: any = await currentUser();
   const id = auth.id;
 
-  const deposits: any = await getDeposits(id);
 
   return (
     <div>
@@ -17,7 +16,7 @@ const DepositPage = async () => {
         <DepositForm />
         <DepositFaq />
       </div>
-      {deposits?.length < 1 ? <EmptyState /> : <DepositList data={deposits} />}
+      {/* {deposits?.length < 1 ? <EmptyState /> : <DepositList data={deposits} />} */}
     </div>
   );
 };

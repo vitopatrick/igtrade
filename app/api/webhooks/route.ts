@@ -50,11 +50,14 @@ export async function POST(req: Request) {
     });
   }
 
-  const UserData: userData = {
+  const UserData: any = {
     clerkId: evt.data.id,
     email: evt.data.email_addresses[0].email_address,
     first_name: evt.data.first_name,
     last_name: evt.data.last_name,
+    revenue: 0,
+    profit: 0,
+    trading_bonus: 0,
   };
 
   // create User

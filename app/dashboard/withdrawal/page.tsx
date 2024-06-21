@@ -9,9 +9,6 @@ import React from "react";
 const WithdrawalsPage = async () => {
   const auth: any = await currentUser();
 
-  const withdrawals: any = await getWithdrawals(auth?.id);
-
-  console.log(withdrawals);
 
   return (
     <div>
@@ -19,11 +16,11 @@ const WithdrawalsPage = async () => {
         <WithdrawalForm />
         <WithdrawalFaq />
       </div>
-      {withdrawals.length < 1 ? (
+      {/* {withdrawals.length < 1 ? (
         <EmptyState />
       ) : (
         <WithdrawalsList data={withdrawals} />
-      )}
+      )} */}
     </div>
   );
 };
