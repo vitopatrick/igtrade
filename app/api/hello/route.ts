@@ -1,9 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
-export async function GET(res: NextApiResponse) {
-  let uri: any = process.env.WEBHOOK_SECRET;
-
-  return res.status(200).json({
-   uri,
- });
+export async function GET(request: Request) {
+  return NextResponse.json({
+    msg: "Hello from server",
+    key: process.env.WEBHOOK_SECRET,
+  });
 }
