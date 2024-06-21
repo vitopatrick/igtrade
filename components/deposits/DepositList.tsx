@@ -35,7 +35,7 @@ export default function DepositList({ data }: any) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((info: any, index: number) => (
+            {/* {data.map((info: any, index: number) => (
               <TableRow key={index}>
                 <TableCell>
                   <div className="font-medium">{info.remarks}</div>
@@ -53,7 +53,7 @@ export default function DepositList({ data }: any) {
                 </TableCell>
                 <TableCell className="text-right">${info.amount}</TableCell>
               </TableRow>
-            ))}
+            ))} */}
           </TableBody>
         </Table>
       </CardContent>
