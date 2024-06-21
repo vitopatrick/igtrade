@@ -1,4 +1,3 @@
-import FcmCard from "@/components/home/FcmCard";
 import Footer from "@/components/home/Footer";
 import Hero from "@/components/home/Hero";
 import NavigationBar from "@/components/home/Nabar";
@@ -9,7 +8,7 @@ const Home = () => {
     <>
       <NavigationBar />
       <Hero />
-      <FcmCard />
+
       <Services />
       <Footer />
     </>

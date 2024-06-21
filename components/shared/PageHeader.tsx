@@ -12,7 +12,7 @@ const PageHeader = ({ title, subtitle, caption }: any) => {
       <div className="text-center h-full w-full bg-gradient-to-br from-green-500/50 to-green-600/30 flex items-center justify-center flex-col space-y-4 p-8">
         <h4 className="text-white text-3xl font-bold uppercase">{title}</h4>
         <h3 className="text-white text-4xl capitalize font-bold">{subtitle}</h3>
-        <p className="text-white ">{caption}</p>
+        <p className="text-white text-2xl lg:w-[40%] mx-auto">{caption}</p>
       </div>
     </div>
   );

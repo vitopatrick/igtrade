@@ -22,7 +22,7 @@ const links = [
 
 const FcmCard = () => {
   return (
-    <div className="absolute top-[44%] my-6">
+    <div>
       <Card className="lg:w-[70%] p-8 mx-auto">
         <CardHeader>
           <CardTitle className="text-xl font-medium uppercase text-center">

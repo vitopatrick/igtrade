@@ -18,10 +18,6 @@ const links = [
 
 const bottomLinks = [
   {
-    href: "/services",
-    title: "Services",
-  },
-  {
     href: "/sign-up",
     title: "Quotes & Chart",
   },
