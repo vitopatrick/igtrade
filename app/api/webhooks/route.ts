@@ -1,7 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser, userData } from "@/actions/user";
+import { userData } from "@/actions/user";
+import { prisma } from "@/prisma/script";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
   // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
 
-  let evt: WebhookEvent | any;
+  let evt: WebhookEvent;
 
   // Verify the payload with the headers
   try {
@@ -49,19 +50,16 @@ export async function POST(req: Request) {
     });
   }
 
-  const UserData: any = {
-    clerkId: evt.data.id,
-    email: evt.data.email_addresses[0].email_address,
-    first_name: evt.data.first_name,
-    last_name: evt.data.last_name,
-    revenue: 0,
-    profit: 0,
-    trading_bonus: 0,
-  };
-
   // create User
   if (evt.type === "user.created") {
-    await createUser(UserData);
+    await prisma.users.create({
+      data: {
+        clerkId: evt.data.id,
+        first_name: evt.data.first_name,
+        last_name: evt.data.last_name,
+        email: evt.data.email_addresses[0].email_address,
+      },
+    });
   }
 
   return new Response("", { status: 200 });

@@ -10,9 +10,9 @@ datasource db {
 
 model Users {
   id           Int            @id @default(autoincrement())
-  first_name   String
-  last_name    String
-  email        String
+  first_name   String?
+  last_name    String?
+  email        String         @unique
   clerkId      String         @unique
   deposits     Deposits[]
   transactions Transactions[]
