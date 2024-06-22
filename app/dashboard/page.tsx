@@ -30,7 +30,7 @@ export default async function Dashboard() {
       <TradingChart chart={user?.chartData} />
 
       {/* transactions list */}
-      {user.transactions?.length < 1 ? <EmptyState /> : <TransactionsList />}
+      {/* {user.transactions?.length < 1 ? <EmptyState /> : <TransactionsList />} */}
     </div>
   );
 }

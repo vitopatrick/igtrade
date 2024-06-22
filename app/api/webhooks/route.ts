@@ -5,7 +5,7 @@ import { createUser, userData } from "@/actions/user";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
-  const WEBHOOK_SECRET = "whsec_eOaZWCkx/Oe78sNdkWugT6p2BSYVt9SR";
+  const WEBHOOK_SECRET = "whsec_oYHFrDU3ICx8ByOEG6Po/DG7IzlJepV5";
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
