@@ -1,10 +1,11 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { prisma } from "@/prisma/script";
+import { createUser } from "@/actions/user";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
+  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
@@ -42,30 +43,30 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-
-    if (evt.type === "user.created") {
-      const { id, email_addresses, first_name, last_name } = evt.data;
-
-      const user = {
-        clerkId: id,
-        first_name,
-        last_name,
-        email: email_addresses[0].email_address,
-      };
-
-      await prisma.users.create({
-        data: {
-          ...user,
-        },
-      });
-
-      return new Response("Account Created", { status: 201 });
-    }
   } catch (err) {
     console.error("Error verifying webhook:", err);
     return new Response("Error occured", {
       status: 400,
     });
+  }
+
+  // Get the ID and type
+  const eventType = evt.type;
+
+  if (eventType === "user.created") {
+    const { id, email_addresses, first_name, last_name, username } = evt.data;
+
+    const user = {
+      clerkId: id,
+      email: email_addresses[0].email_address,
+      username: username!,
+      first_name: first_name,
+      last_name: last_name,
+    };
+
+    const newUser = await createUser(user);
+
+    return NextResponse.json({ message: "OK", user: newUser });
   }
 
   return new Response("", { status: 200 });

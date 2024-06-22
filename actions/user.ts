@@ -2,8 +2,8 @@
 import { prisma } from "@/prisma/script";
 
 export type userData = {
-  first_name: string;
-  last_name: string;
+  first_name: string | any;
+  last_name: string | any;
   email: string;
   clerkId: string | any;
 };
