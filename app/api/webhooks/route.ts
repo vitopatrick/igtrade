@@ -42,30 +42,30 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
+
+    if (evt.type === "user.created") {
+      const { id, email_addresses, first_name, last_name } = evt.data;
+
+      const user = {
+        clerkId: id,
+        first_name,
+        last_name,
+        email: email_addresses[0].email_address,
+      };
+
+      await prisma.users.create({
+        data: {
+          ...user,
+        },
+      });
+
+      return new Response("Account Created", { status: 201 });
+    }
   } catch (err) {
     console.error("Error verifying webhook:", err);
     return new Response("Error occured", {
       status: 400,
     });
-  }
-
-  if (evt.type === "user.created") {
-    const { id, email_addresses, first_name, last_name } = evt.data;
-
-    const user = {
-      clerkId: id,
-      first_name,
-      last_name,
-      email: email_addresses[0].email_address,
-    };
-
-    await prisma.users.create({
-      data: {
-        ...user,
-      },
-    });
-
-    return new Response("Account Created", { status: 201 });
   }
 
   return new Response("", { status: 200 });
