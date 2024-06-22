@@ -3,21 +3,25 @@ generator client {
 }
 
 datasource db {
-  provider     = "cockroachdb"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Users {
-  
-  deposits      Deposits[]
-  transactions  Transactions[]
-  withdrawals   Withdrawals[]
-  chartData     ChartData[]
+  id           Int            @id @default(autoincrement())
+  first_name   String
+  last_name    String
+  email        String
+  clerkId      String         @unique
+  deposits     Deposits[]
+  transactions Transactions[]
+  withdrawals  Withdrawals[]
+  chartData    ChartData[]
 }
 
 model Deposits {
-  id        BigInt   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   amount    Int
   createdAt DateTime @default(now())
   status    String
@@ -25,11 +29,10 @@ model Deposits {
   remarks   String
   user      Users    @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
-  prove     String
 }
 
 model Withdrawals {
-  id        BigInt   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   amount    Int
   createdAt DateTime @default(now())
   status    String
@@ -40,7 +43,7 @@ model Withdrawals {
 }
 
 model Transactions {
-  id        BigInt   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   remarks   String
   type      String
   createdAt DateTime @default(now())
@@ -50,7 +53,7 @@ model Transactions {
 }
 
 model ChartData {
-  id      BigInt @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   profit  Int
   user    Users  @relation(fields: [clerkId], references: [clerkId])
   clerkId String

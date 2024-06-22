@@ -1,10 +1,14 @@
-import User from "@/lib/models/User.Model";
+import { prisma } from "@/prisma/script";
 
 export const getTransactions = async (id: string) => {
   try {
-    const transactions = await User.find({ clerkId: id });
-
-    return transactions;
+    return await prisma.transactions.findMany({
+      where: {
+        user: {
+          clerkId: id,
+        },
+      },
+    });
   } catch (error) {
     return error;
   }

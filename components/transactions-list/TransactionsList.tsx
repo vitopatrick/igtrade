@@ -23,8 +23,6 @@ export default async function TransactionsList() {
 
   const transactions: any = await getTransactions(auth?.id);
 
-  console.log(transactions);
-
   return (
     <Card className="my-5 shadow-sm border w-full col-span-2">
       <CardHeader className="px-7">
@@ -44,7 +42,7 @@ export default async function TransactionsList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {transactions &&
+            {transactions &&
               transactions.map((transaction: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell>
@@ -61,7 +59,7 @@ export default async function TransactionsList() {
                     ${transaction.amount}
                   </TableCell>
                 </TableRow>
-              ))} */}
+              ))}
           </TableBody>
         </Table>
       </CardContent>

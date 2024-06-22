@@ -5,8 +5,6 @@ import Services from "@/components/home/Services";
 import { connectDb } from "@/lib/db";
 
 const Home = async () => {
-  console.log(await connectDb());
-
   return (
     <>
       <NavigationBar />

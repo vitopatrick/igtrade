@@ -47,8 +47,6 @@ const DepositForm = () => {
 
   async function onSubmit(values: z.infer<typeof depositFormSchema>) {
     const returnText = await makeDeposit(values, userId);
-
-    console.log(returnText);
   }
 
   useEffect(() => {
