@@ -4,7 +4,7 @@ import FcmCard from "./FcmCard";
 const Hero = () => {
   return (
     <div
-      className="h-[70vh]"
+      className="lg:h-[70vh]"
       style={{
         backgroundImage:
           "url('https://www.rjobrien.com/wp-content/themes/gate39media/img/homepage-hero-man.3.jpg')",
