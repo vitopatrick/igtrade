@@ -43,9 +43,14 @@ async function makeDeposit(
       },
     });
 
+
+    revalidatePath("/dashboard/deposit");
+
     return {
       msg: "Successfull",
     };
+
+  
   } catch (error) {
     return error;
   }
