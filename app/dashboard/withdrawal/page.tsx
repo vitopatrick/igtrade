@@ -6,6 +6,8 @@ import WithdrawalsList from "@/components/withdrawals/WithdrawalsList";
 import { currentUser } from "@clerk/nextjs/server";
 import React from "react";
 
+export const runtime = "edge";
+
 const WithdrawalsPage = async () => {
   const auth: any = await currentUser();
 

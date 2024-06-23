@@ -3,6 +3,8 @@ import EmptyState from "@/components/empty-state/EmptyState";
 import TransactionsList from "@/components/transactions-list/TransactionsList";
 import { currentUser } from "@clerk/nextjs/server";
 
+export const runtime = "edge";
+
 const TransactionsPage = async () => {
   const auth = await currentUser();
 

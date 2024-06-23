@@ -5,6 +5,8 @@ import PageHeader from "@/components/shared/PageHeader";
 import Link from "next/link";
 import React from "react";
 
+export const runtime = "edge";
+
 const MarketInsightPage = () => {
   return (
     <>

@@ -1,6 +1,8 @@
 import { UserProfile } from "@clerk/nextjs";
 import React from "react";
 
+export const runtime = "edge";
+
 const SettingsPage = () => {
   return (
     <div>

@@ -5,6 +5,8 @@ import PageHeader from "@/components/shared/PageHeader";
 import Timeline from "@/components/timeline/TImeline";
 import React from "react";
 
+export const runtime = "edge";
+
 const TimelinePage = () => {
   return (
     <>
