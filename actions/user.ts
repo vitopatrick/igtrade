@@ -12,7 +12,7 @@ export type userData = {
 // create user
 async function createUser(userData: userData) {
   try {
-    await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         first_name: userData.first_name,
         last_name: userData.last_name,
@@ -21,7 +21,8 @@ async function createUser(userData: userData) {
       },
     });
 
-    console.log("Done");
+    console.log(user);
+    
   } catch (error) {
     return error;
   }

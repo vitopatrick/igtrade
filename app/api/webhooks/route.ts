@@ -66,11 +66,10 @@ export async function POST(req: Request) {
       last_name: last_name,
     };
 
-    const newUser = await createUser(user);
+    await createUser(user);
 
-    console.log(newUser);
 
-    return NextResponse.json({ message: "OK", user: newUser });
+    return NextResponse.json({ message: "OK" });
   }
 
   return new Response("", { status: 200 });
