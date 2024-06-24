@@ -12,7 +12,9 @@ import { currentUser } from "@clerk/nextjs/server";
 export default async function Dashboard() {
   const auth = await currentUser();
 
-  const user: any = auth && (await getUser(auth?.id));
+  const users: any = await getUser(auth?.id);
+
+  const user = users[0];
 
 
   return (

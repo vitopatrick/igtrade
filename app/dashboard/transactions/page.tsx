@@ -8,7 +8,8 @@ import { currentUser } from "@clerk/nextjs/server";
 const TransactionsPage = async () => {
   const auth = await currentUser();
 
-  const user: any = await getUser(auth?.id);
+  const users: any = await getUser(auth?.id);
+  const user = users[0];
 
   const transactions: any = user?.transactions;
 

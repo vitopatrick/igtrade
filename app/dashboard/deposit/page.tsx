@@ -12,6 +12,7 @@ const DepositPage = async () => {
   const id = auth.id;
   const deposits: any = await getDeposits(id);
 
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row gap-4">
