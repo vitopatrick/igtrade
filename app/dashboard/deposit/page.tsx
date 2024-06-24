@@ -5,7 +5,7 @@ import DepositList from "@/components/deposits/DepositList";
 import EmptyState from "@/components/empty-state/EmptyState";
 import { currentUser } from "@clerk/nextjs/server";
 
-export const runtime = "edge";
+;
 
 const DepositPage = async () => {
   const auth: any = await currentUser();

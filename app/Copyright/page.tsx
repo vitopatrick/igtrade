@@ -4,7 +4,7 @@ import { BottomHeader } from "@/components/shared/BottomHeader";
 import PageHeader from "@/components/shared/PageHeader";
 import React from "react";
 
-export const runtime = "edge";
+;
 
 const CopyrightPage = () => {
   return (

@@ -4,7 +4,7 @@ import NavigationBar from "@/components/home/Nabar";
 import PageHeader from "@/components/shared/PageHeader";
 import React from "react";
 
-export const runtime = "edge";
+;
 
 const ContactUsPage = () => {
   return (

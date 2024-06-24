@@ -5,7 +5,7 @@ import TopAssets from "@/components/balance-cards/TopAssets";
 import { AccountSummaryChart } from "@/components/charts/AccountSummaryChart";
 import { currentUser } from "@clerk/nextjs/server";
 
-export const runtime = "edge";
+;
 
 const WalletPage = async () => {
   const auth = await currentUser();
