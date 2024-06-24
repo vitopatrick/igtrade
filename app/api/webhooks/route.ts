@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
-  const WEBHOOK_SECRET = "whsec_Wp5rR1Io+4IVDWTJtDvPOkwdLGgjPg2E";
+  const WEBHOOK_SECRET = "whsec_ZL5vGaowXZRNQedXO2Nrh9bDnpUTKQ3m";
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
