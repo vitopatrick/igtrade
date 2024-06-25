@@ -11,7 +11,7 @@ export default function DashboardCards({ amount = 0 }: any) {
         <DollarSign className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">${formatNumber(amount)}</div>
+        <div className="text-2xl font-bold">{formatNumber(amount)}</div>
       </CardContent>
     </Card>
   );
