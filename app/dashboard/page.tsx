@@ -15,6 +15,8 @@ export default async function Dashboard() {
 
   const user: any = await getUser(email);
 
+  console.log(user);
+
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
