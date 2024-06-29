@@ -8,8 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate, formatNumber } from "@/lib/format";
-import { Button } from "../ui/button";
-import { Trash2Icon } from "lucide-react";
+// import { Button } from "../ui/button";
+// import { Trash2Icon } from "lucide-react";
 
 export default function ProfitTable({ data }: any) {
   return (
@@ -23,7 +23,7 @@ export default function ProfitTable({ data }: any) {
             <TableRow>
               <TableHead className="hidden sm:table-cell">Amount</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              {/* <TableHead className="text-right">Actions</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -33,11 +33,11 @@ export default function ProfitTable({ data }: any) {
                 <TableCell className="hidden md:table-cell">
                   {formatDate(transaction.createdAt)}
                 </TableCell>
-                <TableCell className="text-right">
+                {/* <TableCell className="text-right">
                   <Button variant={"destructive"}>
                     <Trash2Icon strokeWidth={1} />
                   </Button>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>
