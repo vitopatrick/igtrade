@@ -11,17 +11,20 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Dashboard() {
   const auth = await currentUser();
+  let email = auth?.emailAddresses[0].emailAddress;
 
-  const users: any = await getUser(auth?.id);
+  const users: any = await getUser(email);
 
   const user = users[0];
-
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
       <div>
         <h4 className="uppercase">
-          Hello <span className="font-bold">{user?.first_name}</span>
+          Hello{" "}
+          <span className="font-bold">
+            {user?.first_name} {user.last_name}
+          </span>
         </h4>
       </div>
       <div className="flex flex-col lg:flex-row gap-4 col-span-2">

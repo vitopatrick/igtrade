@@ -9,9 +9,10 @@ import React from "react";
 ;
 
 const WithdrawalsPage = async () => {
-  const auth: any = await currentUser();
+  const auth = await currentUser();
+  let email: any = auth?.emailAddresses[0].emailAddress;
 
-  const withdrawals: any = await getWithdrawals(auth.id);
+  const withdrawals: any = await getWithdrawals(email);
 
 
   return (

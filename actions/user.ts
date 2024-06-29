@@ -1,6 +1,10 @@
 "use server";
 
+import { updateSchema } from "@/components/admin/EditDetails";
 import { prisma } from "@/prisma/script";
+import { revalidatePath } from "next/cache";
+
+import { z } from "zod";
 
 export type userData = {
   first_name: string | any;
@@ -20,20 +24,17 @@ async function createUser(userData: userData) {
         clerkId: userData.clerkId,
       },
     });
-
-    console.log(user);
-    
   } catch (error) {
     return error;
   }
 }
 
 // Get user
-async function getUser(id: string | any) {
+async function getUser(email: string | any) {
   try {
     return await prisma.users.findMany({
       where: {
-        clerkId: id,
+        email,
       },
       include: {
         chartData: true,
@@ -42,8 +43,66 @@ async function getUser(id: string | any) {
       },
     });
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }
 
-export { createUser, getUser };
+// Get user
+async function getUserWithId(clerkId: string | any) {
+  try {
+    return await prisma.users.findMany({
+      where: {
+        clerkId,
+      },
+      include: {
+        chartData: true,
+        transactions: true,
+        deposits: true,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
+// get All the users
+async function getAllUsers() {
+  try {
+    return await prisma.users.findMany();
+  } catch (error) {
+    return error;
+  }
+}
+
+// update user profit
+async function updateUserBalance(
+  email: string,
+  details: z.infer<typeof updateSchema>
+) {
+  try {
+    await prisma.users.update({
+      where: {
+        email,
+      },
+      data: {
+        profit: {
+          increment: +details.profit,
+        },
+        revenue: {
+          increment: +details.revenue,
+        },
+        trading_bonus: {
+          increment: +details.trading_bonus,
+        },
+      },
+    });
+
+    revalidatePath("/ow");
+
+    return { message: "Update done" };
+  } catch (error) {
+    return error;
+  }
+}
+
+export { createUser, getUser, getAllUsers, getUserWithId, updateUserBalance };

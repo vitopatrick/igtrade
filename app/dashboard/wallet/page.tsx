@@ -9,8 +9,9 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const WalletPage = async () => {
   const auth = await currentUser();
+  let email = auth?.emailAddresses[0].emailAddress;
 
-  const users: any = await getUser(auth?.id);
+  const users: any = await getUser(email);
 
   const user = users[0];
 

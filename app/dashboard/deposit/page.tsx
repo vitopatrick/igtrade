@@ -8,9 +8,10 @@ import { currentUser } from "@clerk/nextjs/server";
 ;
 
 const DepositPage = async () => {
-  const auth: any = await currentUser();
-  const id = auth.id;
-  const deposits: any = await getDeposits(id);
+  const auth = await currentUser();
+  let email: any = auth?.emailAddresses[0].emailAddress;
+  const deposits: any = await getDeposits(email);
+
 
 
   return (

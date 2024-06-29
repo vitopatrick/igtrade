@@ -1,6 +1,14 @@
 import Link from "next/link";
 
-import { Home, Wallet, DollarSign, Cog, UploadCloud } from "lucide-react";
+import {
+  Home,
+  Wallet,
+  DollarSign,
+  Cog,
+  UploadCloud,
+  Newspaper,
+  CandlestickChart,
+} from "lucide-react";
 import { StackIcon } from "@radix-ui/react-icons";
 
 const sideMenuLinks = [
@@ -30,12 +38,24 @@ const sideMenuLinks = [
   },
   {
     id: 5,
+    href: "/dashboard/market-news",
+    icon: <Newspaper className="h-4 w-4" />,
+    title: "Market News",
+  },
+  // {
+  //   id: 6,
+  //   href: "/dashboard/trade",
+  //   icon: <CandlestickChart className="h-4 w-4" />,
+  //   title: "Trade",
+  // },
+  {
+    id: 7,
     href: "/dashboard/withdrawal",
     icon: <UploadCloud className="h-4 w-4" />,
     title: "Withdrawals",
   },
   {
-    id: 6,
+    id: 8,
     href: "/dashboard/settings",
     icon: <Cog className="h-4 w-4" />,
     title: "Settings",

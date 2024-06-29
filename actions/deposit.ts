@@ -5,12 +5,12 @@ import { z } from "zod";
 import { depositFormSchema } from "@/lib/schemas";
 import { revalidatePath } from "next/cache";
 
-async function getDeposits(id: string) {
+async function getDeposits(email: string) {
   try {
     return await prisma.deposits.findMany({
       where: {
         user: {
-          clerkId: id,
+          email,
         },
       },
     });

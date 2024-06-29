@@ -13,3 +13,15 @@ export const getTransactions = async (id: string) => {
     return error;
   }
 };
+
+export const getAllTransactions = async () => {
+  try {
+    return await prisma.transactions.findMany({
+      include: {
+        user: true,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
+};

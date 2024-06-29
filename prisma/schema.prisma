@@ -5,9 +5,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // provider  = "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Users {
@@ -20,14 +21,15 @@ model Users {
   transactions  Transactions[]
   withdrawals   Withdrawals[]
   chartData     ChartData[]
-  revenue       Int            @default(0)
-  profit        Int            @default(0)
-  trading_bonus Int            @default(0)
+  revenue       Float          @default(0)
+  profit        Float          @default(0)
+  trading_bonus Float          @default(0)
+  createdAt     DateTime       @default(now())
 }
 
 model Deposits {
   id        Int      @id @default(autoincrement())
-  amount    Int
+  amount    Float
   createdAt DateTime @default(now())
   status    String
   method    String
@@ -38,7 +40,7 @@ model Deposits {
 
 model Withdrawals {
   id        Int      @id @default(autoincrement())
-  amount    Int
+  amount    Float
   createdAt DateTime @default(now())
   status    String
   method    String
@@ -52,15 +54,15 @@ model Transactions {
   remarks   String
   type      String
   createdAt DateTime @default(now())
-  amount    Int
+  amount    Float
   user      Users    @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
 }
 
 model ChartData {
-  id      Int    @id @default(autoincrement())
-  profit  Int
-  user    Users  @relation(fields: [clerkId], references: [clerkId])
+  id      Int      @id @default(autoincrement())
+  profit  Float
+  user    Users    @relation(fields: [clerkId], references: [clerkId])
   clerkId String
   date    DateTime
 }
