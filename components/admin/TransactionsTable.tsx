@@ -48,7 +48,7 @@ export default async function TransactionsTable() {
             </TableHeader>
             <TableBody>
               {transactions.map((transaction: any) => (
-                <TableRow>
+                <TableRow key={transaction.first_name}>
                   <TableCell>
                     <div className="font-medium">
                       {transaction.user.first_name} {transaction.user.last_name}
