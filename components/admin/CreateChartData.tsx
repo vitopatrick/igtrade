@@ -36,7 +36,7 @@ export default function CreateChartData({ user }: any) {
   });
 
   async function onSubmit(values: z.infer<typeof profitSchema>) {
-    const returnText = await createChartData(user.clerkId, values);
+    const returnText: any = await createChartData(user.clerkId, values);
 
     toast.success(returnText.message, {
       description: "Updated User Balance",
