@@ -24,7 +24,6 @@ model Users {
   revenue       Float          @default(0)
   profit        Float          @default(0)
   trading_bonus Float          @default(0)
-  createdAt     DateTime       @default(now())
 }
 
 model Deposits {

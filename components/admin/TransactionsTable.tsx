@@ -24,7 +24,6 @@ import { formatDate, formatNumber } from "@/lib/format";
 export default async function TransactionsTable() {
   const transactions: any = await getAllTransactions();
 
-
   return (
     <Card className="xl:col-span-2">
       <CardHeader className="flex flex-row items-center">
