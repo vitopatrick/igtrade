@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
 
       {/* Trades and transactions */}
-      <div>
+      <div className="my-5">
         {user.transactions.length < 1 && <EmptyState />}
 
         {transactions.length > 0 && <TransactionsHistory data={transactions} />}
