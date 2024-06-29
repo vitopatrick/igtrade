@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={sans.className}>
           {children}
-          <Toaster />
+          <Toaster position="bottom-center" richColors />
         </body>
       </html>
     </ClerkProvider>

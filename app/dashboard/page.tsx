@@ -13,9 +13,8 @@ export default async function Dashboard() {
   const auth = await currentUser();
   let email = auth?.emailAddresses[0].emailAddress;
 
-  const users: any = await getUser(email);
+  const user: any = await getUser(email);
 
-  const user = users[0];
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">

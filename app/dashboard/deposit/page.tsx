@@ -5,14 +5,12 @@ import DepositList from "@/components/deposits/DepositList";
 import EmptyState from "@/components/empty-state/EmptyState";
 import { currentUser } from "@clerk/nextjs/server";
 
-;
+
 
 const DepositPage = async () => {
   const auth = await currentUser();
   let email: any = auth?.emailAddresses[0].emailAddress;
   const deposits: any = await getDeposits(email);
-
-
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import NewsCards from "@/components/news-cards/NewsCards";
-import Newsletter from "@/components/news-cards/NewsLetter";
+// import Newsletter from "@/components/news-cards/NewsLetter";
 // import { news } from "@/mock/data";
 
 const MarketNews = async () => {
@@ -19,7 +19,7 @@ const MarketNews = async () => {
           <NewsCards article={article} key={index} />
         ))}
       </div>
-      <Newsletter />
+      {/* <Newsletter /> */}
     </>
   );
 };

@@ -16,14 +16,6 @@ const links = [
     href: "/ow",
     title: "Trade",
   },
-  {
-    href: "/ow/chart-data",
-    title: "Chart Data",
-  },
-  {
-    href: "/ow",
-    title: "Transaction",
-  },
 ];
 
 const AdminHeader = () => {

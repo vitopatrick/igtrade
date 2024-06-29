@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { toast } from "sonner";
 import {
   FormControl,
@@ -23,14 +22,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { updateUserBalance } from "@/actions/user";
-
-export const updateSchema = z.object({
-  profit: z.string().min(0).max(50),
-  revenue: z.string().min(0).max(50),
-  trading_bonus: z.string().min(0).max(50),
-});
+import { updateSchema } from "@/lib/schemas";
 
 const EditDetails = ({ user }: any) => {
   const form = useForm<z.infer<typeof updateSchema>>({
@@ -45,7 +38,7 @@ const EditDetails = ({ user }: any) => {
   async function onSubmit(values: z.infer<typeof updateSchema>) {
     const returnText: any = await updateUserBalance(user.email, values);
 
-    toast(returnText.message, {
+    toast.success(returnText.message, {
       description: "Updated User Balance",
     });
   }
@@ -54,7 +47,7 @@ const EditDetails = ({ user }: any) => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Edit Profile</Button>
+          <Button>Edit Balance</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

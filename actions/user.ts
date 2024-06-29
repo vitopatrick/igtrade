@@ -1,6 +1,6 @@
 "use server";
 
-import { updateSchema } from "@/components/admin/EditDetails";
+import { updateSchema } from "@/lib/schemas";
 import { prisma } from "@/prisma/script";
 import { revalidatePath } from "next/cache";
 
@@ -32,7 +32,7 @@ async function createUser(userData: userData) {
 // Get user
 async function getUser(email: string | any) {
   try {
-    return await prisma.users.findMany({
+    return await prisma.users.findFirst({
       where: {
         email,
       },
@@ -50,7 +50,7 @@ async function getUser(email: string | any) {
 // Get user
 async function getUserWithId(clerkId: string | any) {
   try {
-    return await prisma.users.findMany({
+    return await prisma.users.findFirst({
       where: {
         clerkId,
       },

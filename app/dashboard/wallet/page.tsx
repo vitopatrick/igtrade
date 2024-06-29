@@ -1,20 +1,16 @@
 import { getUser } from "@/actions/user";
+import TradingChart from "@/components/Chart/TradingChart";
 import BonusCard from "@/components/balance-cards/Bonus";
 import DashboardCards from "@/components/balance-cards/DashboardCards";
 import TopAssets from "@/components/balance-cards/TopAssets";
-import { AccountSummaryChart } from "@/components/charts/AccountSummaryChart";
+import { formatDate } from "@/lib/format";
 import { currentUser } from "@clerk/nextjs/server";
-
-;
 
 const WalletPage = async () => {
   const auth = await currentUser();
   let email = auth?.emailAddresses[0].emailAddress;
 
-  const users: any = await getUser(email);
-
-  const user = users[0];
-
+  const user: any = await getUser(email);
 
   return (
     <div>
@@ -28,10 +24,7 @@ const WalletPage = async () => {
         <BonusCard amount={user?.trading_bonus} />
       </div>
       {/* chart */}
-      <div className="mt-[10%] border shadow-md p-4 rounded-xl">
-        <h4 className="underline">Account Summary</h4>
-        <AccountSummaryChart chart={user.chartData} />
-      </div>
+      <TradingChart chart={user.chartData} />
     </div>
   );
 };

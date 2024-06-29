@@ -39,11 +39,13 @@ async function createWithdrawals(
   }
 }
 
-async function getWithdrawals(id: string) {
+async function getWithdrawals(email: string) {
   try {
     return await prisma.withdrawals.findMany({
       where: {
-        clerkId: id,
+        user: {
+          email,
+        },
       },
     });
   } catch (error) {
