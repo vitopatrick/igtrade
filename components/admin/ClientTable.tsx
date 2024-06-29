@@ -28,7 +28,7 @@ const ClientTable = ({ users }: any) => {
             {users.map((user: any) => (
               <TableRow className="bg-accent" key={user.id}>
                 <TableCell>
-                  <Link href={`/ow/clients/${user.clerkId}`}>
+                  <Link href={`/admin/clients/${user.clerkId}`}>
                     <div className="font-medium">
                       {user.first_name} {user.last_name}
                     </div>

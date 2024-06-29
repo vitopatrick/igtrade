@@ -15,7 +15,7 @@ export default async function UsersTable() {
       <CardContent className="grid gap-8">
         {users.map((user: any) => (
           <Link
-            href={`/ow/clients/${user.clerkId}`}
+            href={`/admin/clients/${user.clerkId}`}
             className="flex items-center gap-4"
             key={user.first_name}
           >

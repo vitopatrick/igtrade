@@ -18,7 +18,7 @@ export const createChartData = async (
       },
     });
 
-    revalidatePath("/ow");
+    revalidatePath("/admin");
 
     return {
       message: "Added Data",

@@ -1,19 +1,19 @@
 import Link from "next/link";
-import { Menu, Package2 } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const links = [
   {
-    href: "/ow",
+    href: "/admin",
     title: "Dashboard",
   },
   {
-    href: "/ow/clients",
+    href: "/admin/clients",
     title: "Clients",
   },
   {
-    href: "/ow",
+    href: "/admin",
     title: "Trade",
   },
 ];

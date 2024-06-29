@@ -97,7 +97,7 @@ async function updateUserBalance(
       },
     });
 
-    revalidatePath("/ow");
+    revalidatePath("/admin");
 
     return { message: "Update done" };
   } catch (error) {

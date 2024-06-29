@@ -70,7 +70,7 @@ export const createTransactions = async (
       },
     });
 
-    revalidatePath("/ow");
+    revalidatePath("/admin");
 
     return {
       message: "Created Transactions",
@@ -79,7 +79,6 @@ export const createTransactions = async (
     return error;
   }
 };
-
 
 export const deleteTransaction = async (id: number, type: string) => {
   try {
@@ -105,7 +104,7 @@ export const deleteTransaction = async (id: number, type: string) => {
       },
     });
 
-    revalidatePath("/ow");
+    revalidatePath("/admin");
 
     return {
       message: "Deleted",
