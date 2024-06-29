@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   // provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -21,6 +21,7 @@ model Users {
   transactions  Transactions[]
   withdrawals   Withdrawals[]
   chartData     ChartData[]
+  trades        Trade[]
   revenue       Float          @default(0)
   profit        Float          @default(0)
   trading_bonus Float          @default(0)
@@ -65,4 +66,14 @@ model ChartData {
   user    Users    @relation(fields: [clerkId], references: [clerkId])
   clerkId String
   date    DateTime
+}
+
+model Trade {
+  id      Int      @id @default(autoincrement())
+  amount  Float
+  profit  Float
+  user    Users    @relation(fields: [clerkId], references: [clerkId])
+  clerkId String
+  date    DateTime @default(now())
+  commodity String 
 }
