@@ -1,5 +1,9 @@
 export const formatDate = (date: string | any) => {
-  return new Intl.DateTimeFormat().format(date);
+  return new Intl.DateTimeFormat("en", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 };
 
 export const formatNumber = (number: number) => {
