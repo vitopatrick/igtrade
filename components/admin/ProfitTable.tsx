@@ -1,12 +1,4 @@
-"use client";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -18,39 +10,28 @@ import {
 import { formatDate, formatNumber } from "@/lib/format";
 import { Button } from "../ui/button";
 import { Trash2Icon } from "lucide-react";
-import { toast } from "sonner";
-import { deleteTransaction } from "@/actions/transactions";
 
-export default function TransactionHistory({ data }: any) {
+export default function ProfitTable({ data }: any) {
   return (
     <Card>
       <CardHeader className="px-7">
-        <CardTitle>Transactions</CardTitle>
-        <CardDescription>Recent Transactions.</CardDescription>
+        <CardTitle>Profit Table</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden sm:table-cell">Type</TableHead>
+              <TableHead className="hidden sm:table-cell">Amount</TableHead>
               <TableHead className="hidden md:table-cell">Date</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data.map((transaction: any) => (
               <TableRow className="bg-accent" key={transaction.id}>
-                <TableCell className="hidden sm:table-cell uppercase">
-                  {transaction.type}
-                </TableCell>
-
+                <TableCell>{formatNumber(transaction.profit)}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {formatDate(transaction.createdAt)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {" "}
-                  {formatNumber(transaction.amount)}
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant={"destructive"}>

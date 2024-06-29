@@ -79,3 +79,39 @@ export const createTransactions = async (
     return error;
   }
 };
+
+
+export const deleteTransaction = async (id: number, type: string) => {
+  try {
+    if (type === "deposit") {
+      await prisma.deposits.delete({
+        where: {
+          id,
+        },
+      });
+    }
+
+    if (type === "withdrawal") {
+      await prisma.withdrawals.delete({
+        where: {
+          id,
+        },
+      });
+    }
+
+    await prisma.transactions.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath("/ow");
+
+    return {
+      message: "Deleted",
+    };
+  } catch (error) {
+    return error;
+    console.log(error);
+  }
+};

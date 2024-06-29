@@ -2,6 +2,7 @@ import { getUserWithId } from "@/actions/user";
 import CreateChartData from "@/components/admin/CreateChartData";
 import CreateTransaction from "@/components/admin/CreateTransaction";
 import EditDetails from "@/components/admin/EditDetails";
+import ProfitTable from "@/components/admin/ProfitTable";
 import TransactionsHistory from "@/components/admin/TransactionHistory";
 import BonusCard from "@/components/balance-cards/Bonus";
 import DashboardCards from "@/components/balance-cards/DashboardCards";
@@ -12,6 +13,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const user: any = await getUserWithId(params.id);
 
   const transactions = user.transactions;
+  const chartDetails = user.chartData;
 
   return (
     <div>
@@ -40,10 +42,19 @@ export default async function Page({ params }: { params: { id: string } }) {
           <BonusCard amount={user.trading_bonus} />
         </div>
       </div>
-      {/* Trades and transactions */}
-      {user.transactions.length < 1 && <EmptyState />}
 
-      {transactions.length > 1 && <TransactionsHistory data={transactions} />}
+      {/* Profits  */}
+      <div>
+        {chartDetails.length < 1 && <EmptyState />}
+        {chartDetails.length > 1 && <ProfitTable data={chartDetails} />}
+      </div>
+
+      {/* Trades and transactions */}
+      <div>
+        {user.transactions.length < 1 && <EmptyState />}
+
+        {transactions.length > 1 && <TransactionsHistory data={transactions} />}
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ const AccountSummaryChart = ({ data }: any) => {
         <XAxis dataKey="date" />
         <YAxis tickLine={false} />
         <Tooltip />
-        <Bar dataKey="profit" fill="#1d4ed8" barSize={50} />
+        <Bar dataKey="profit" fill="#1d4ed8" barSize={70} />
       </BarChart>
     </ResponsiveContainer>
   );

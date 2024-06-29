@@ -9,9 +9,7 @@ const TransactionsPage = async () => {
   const auth = await currentUser();
   let email = auth?.emailAddresses[0].emailAddress;
 
-  const users: any = await getUser(email);
-
-  const user = users[0];
+  const user: any = await getUser(email);
 
   const transactions = user.transactions;
 
