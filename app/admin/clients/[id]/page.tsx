@@ -46,14 +46,14 @@ export default async function Page({ params }: { params: { id: string } }) {
       {/* Profits  */}
       <div>
         {chartDetails.length < 1 && <EmptyState />}
-        {chartDetails.length > 1 && <ProfitTable data={chartDetails} />}
+        {chartDetails.length > 0 && <ProfitTable data={chartDetails} />}
       </div>
 
       {/* Trades and transactions */}
       <div>
         {user.transactions.length < 1 && <EmptyState />}
 
-        {transactions.length > 1 && <TransactionsHistory data={transactions} />}
+        {transactions.length > 0 && <TransactionsHistory data={transactions} />}
       </div>
     </div>
   );
