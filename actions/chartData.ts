@@ -18,6 +18,16 @@ export const createChartData = async (
       },
     });
 
+
+    await prisma.transactions.create({
+      data: {
+        amount: +data.profit,
+        type: "Market Trade",
+        clerkId: id,
+        remarks: "N/A",
+      },
+    });
+
     revalidatePath("/admin");
 
     return {

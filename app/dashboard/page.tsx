@@ -7,16 +7,12 @@ import EmptyState from "@/components/empty-state/EmptyState";
 import TransactionsList from "@/components/transactions-list/TransactionsList";
 import { currentUser } from "@clerk/nextjs/server";
 
-;
-
 export default async function Dashboard() {
   const auth = await currentUser();
+
   let email = auth?.emailAddresses[0].emailAddress;
 
   const user: any = await getUser(email);
-
-  console.log(user);
-
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
