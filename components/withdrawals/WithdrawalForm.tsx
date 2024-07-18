@@ -29,6 +29,8 @@ import { useAuth } from "@clerk/nextjs";
 const WithdrawalForm = () => {
   const auth: any = useAuth();
 
+  // account, routing number, bank name,benifi name
+
   const form = useForm<z.infer<typeof withdrawalSchema>>({
     resolver: zodResolver(withdrawalSchema),
     defaultValues: {
@@ -45,7 +47,7 @@ const WithdrawalForm = () => {
   const methods = ["btc", "eth"];
 
   async function onSubmit(values: z.infer<typeof withdrawalSchema>) {
-     await createWithdrawals(values, auth.userId);
+    await createWithdrawals(values, auth.userId);
   }
 
   return (
@@ -138,6 +140,7 @@ const WithdrawalForm = () => {
                 />
               </div>
             )}
+
             {/* Deposit Remarks */}
             <div>
               <FormField

@@ -13,14 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useAuth } from "@clerk/nextjs";
 import { ModeToggle } from "../navbar/Toggle";
 
 const DashboardHeader = () => {
-  const pathname = usePathname();
-
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -54,7 +51,9 @@ const DashboardHeader = () => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <SignOutButton redirectUrl="/">Logout</SignOutButton>
+            <SignOutButton>
+              <button>Logout</button>
+            </SignOutButton>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
