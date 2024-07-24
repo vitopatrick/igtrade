@@ -19,7 +19,7 @@ const ContactForm = () => {
           <h4 className="font-bold">Technology Question </h4>{" "}
           <p>
             {" "}
-            <span className="block">Email:</span> clientservices@rjobrienhub.com
+            <span className="block">Email:</span> contact@rjobrienhub.net
           </p>
         </div>
       </div>
