@@ -10,7 +10,7 @@ async function createWithdrawals(
   id: string
 ) {
   try {
-    await prisma.withdrawals.create({
+    await prisma.withdrawal.create({
       data: {
         amount: +details.amount,
         method: details.method,
@@ -20,7 +20,7 @@ async function createWithdrawals(
       },
     });
 
-    await prisma.transactions.create({
+    await prisma.transaction.create({
       data: {
         amount: +details.amount,
         type: "withdrawal",
@@ -41,7 +41,7 @@ async function createWithdrawals(
 
 async function getWithdrawals(email: string) {
   try {
-    return await prisma.withdrawals.findMany({
+    return await prisma.withdrawal.findMany({
       where: {
         user: {
           email,
