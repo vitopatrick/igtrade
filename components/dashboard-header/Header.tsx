@@ -51,7 +51,12 @@ const DashboardHeader = () => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <SignOutButton>
+            <SignOutButton
+              redirectUrl="/"
+              signOutOptions={{
+                redirectUrl: "/",
+              }}
+            >
               <button>Logout</button>
             </SignOutButton>
           </DropdownMenuItem>

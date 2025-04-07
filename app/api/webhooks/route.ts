@@ -4,12 +4,9 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser } from "@/actions/user";
 import { NextResponse } from "next/server";
 
-;
-
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
-  const WEBHOOK_SECRET = "whsec_Wp5rR1Io+4IVDWTJtDvPOkwdLGgjPg2E";
-  // const WEBHOOK_SECRET = "whsec_ZL5vGaowXZRNQedXO2Nrh9bDnpUTKQ3m";
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
     throw new Error(

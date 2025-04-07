@@ -5,18 +5,13 @@ import DashboardCards from "@/components/balance-cards/DashboardCards";
 import TopAssets from "@/components/balance-cards/TopAssets";
 import EmptyState from "@/components/empty-state/EmptyState";
 import TransactionsList from "@/components/transactions-list/TransactionsList";
-import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Dashboard() {
-  const auth = await currentUser();
-
-  let email = auth?.emailAddresses[0].emailAddress;
-
-  const user: any = await getUser(email);
+  const user: any = await getUser();
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div>
+      {/* <div>
         <h4 className="uppercase">
           Hello{" "}
           <span className="font-bold">
@@ -28,13 +23,13 @@ export default async function Dashboard() {
         <DashboardCards amount={user?.revenue} />
         <TopAssets amount={user?.profit} />
         <BonusCard amount={user?.trading_bonus} />
-      </div>
+      </div> */}
 
       {/* chart */}
-      <TradingChart chart={user?.chartData} />
+      {/* {user && <TradingChart chart={user?.chartData} />} */}
 
       {/* transactions list */}
-      {user.transactions?.length < 1 ? <EmptyState /> : <TransactionsList />}
+      {/* {user.transactions?.length < 1 ? <EmptyState /> : <TransactionsList />} */}
     </div>
   );
 }

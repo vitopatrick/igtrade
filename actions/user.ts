@@ -3,6 +3,7 @@
 import { updateSchema } from "@/lib/schemas";
 import { prisma } from "@/prisma/script";
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@clerk/nextjs/server";
 
 import { z } from "zod";
 
@@ -24,17 +25,26 @@ async function createUser(userData: userData) {
         clerkId: userData.clerkId,
       },
     });
+
+    if (user) {
+      return {
+        message: "user created",
+      };
+    }
   } catch (error) {
     return error;
   }
 }
 
 // Get user
-async function getUser(email: string | any) {
+async function getUser() {
+  const session = await currentUser();
+  const userId = session?.id as string;
+
   try {
-    return await prisma.users.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
-        email,
+        clerkId: userId,
       },
       include: {
         chartData: true,
@@ -42,6 +52,8 @@ async function getUser(email: string | any) {
         deposits: true,
       },
     });
+
+    if (user) return user;
   } catch (error) {
     return error;
   }

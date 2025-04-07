@@ -1,12 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  // binaryTargets = ["native", "rhel-openssl-1.0.x"]
-  // engineType    = "binary" 
 }
 
 datasource db {
-  provider  = "postgresql"
-  // provider = "sqlite"
+  provider  = "postgres"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
@@ -69,11 +66,11 @@ model ChartData {
 }
 
 model Trade {
-  id      Int      @id @default(autoincrement())
-  amount  Float
-  profit  Float
-  user    Users    @relation(fields: [clerkId], references: [clerkId])
-  clerkId String
-  date    DateTime @default(now())
-  commodity String 
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  profit    Float
+  user      Users    @relation(fields: [clerkId], references: [clerkId])
+  clerkId   String
+  date      DateTime @default(now())
+  commodity String
 }

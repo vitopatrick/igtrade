@@ -1,8 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 import React from "react";
 
-;
-
 const SignInPage = () => {
   return (
     <div className="bg-gradient-to-r from-[#2C5364] via-[#203A43] to-[ #2C5364] h-screen">
