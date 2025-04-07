@@ -12,8 +12,6 @@ const TradingChart = ({ chart }: any) => {
 
   const sortedArray = newData.sort((a: any, b: any) => a.date - b.date);
 
-  console.log(sortedArray);
-
   return (
     <div className="col-span-2 p-4 rounded-xl border shadow-sm">
       <div className="lg:mb-[10%] mb-[5%]">

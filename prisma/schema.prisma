@@ -8,59 +8,59 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Users {
-  id            Int            @id @default(autoincrement())
+model User {
+  id            Int           @id @default(autoincrement())
   first_name    String?
   last_name     String?
-  email         String         @unique
-  clerkId       String         @unique
-  deposits      Deposits[]
-  transactions  Transactions[]
-  withdrawals   Withdrawals[]
+  email         String        @unique
+  clerkId       String        @unique
+  deposits      Deposit[]
+  transactions  Transaction[]
+  withdrawals   Withdrawal[]
   chartData     ChartData[]
   trades        Trade[]
-  revenue       Float          @default(0)
-  profit        Float          @default(0)
-  trading_bonus Float          @default(0)
-  createdAt     DateTime       @default(now())
+  revenue       Float         @default(0)
+  profit        Float         @default(0)
+  trading_bonus Float         @default(0)
+  createdAt     DateTime      @default(now())
 }
 
-model Deposits {
+model Deposit {
   id        Int      @id @default(autoincrement())
   amount    Float
   createdAt DateTime @default(now())
   status    String
   method    String
   remarks   String
-  user      Users    @relation(fields: [clerkId], references: [clerkId])
+  user      User     @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
 }
 
-model Withdrawals {
+model Withdrawal {
   id        Int      @id @default(autoincrement())
   amount    Float
   createdAt DateTime @default(now())
   status    String
   method    String
   remarks   String
-  user      Users    @relation(fields: [clerkId], references: [clerkId])
+  user      User     @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
 }
 
-model Transactions {
+model Transaction {
   id        Int      @id @default(autoincrement())
   remarks   String
   type      String
   createdAt DateTime @default(now())
   amount    Float
-  user      Users    @relation(fields: [clerkId], references: [clerkId])
+  user      User     @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
 }
 
 model ChartData {
   id      Int      @id @default(autoincrement())
   profit  Float
-  user    Users    @relation(fields: [clerkId], references: [clerkId])
+  user    User     @relation(fields: [clerkId], references: [clerkId])
   clerkId String
   date    DateTime
 }
@@ -69,7 +69,7 @@ model Trade {
   id        Int      @id @default(autoincrement())
   amount    Float
   profit    Float
-  user      Users    @relation(fields: [clerkId], references: [clerkId])
+  user      User     @relation(fields: [clerkId], references: [clerkId])
   clerkId   String
   date      DateTime @default(now())
   commodity String

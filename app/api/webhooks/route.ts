@@ -1,8 +1,8 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser } from "@/actions/user";
 import { NextResponse } from "next/server";
+import { prisma } from "@/prisma/script";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -54,17 +54,16 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, email_addresses, first_name, last_name, username } = evt.data;
+    const { id, email_addresses, first_name, last_name } = evt.data;
 
-    const user = {
-      clerkId: id,
-      email: email_addresses[0].email_address,
-      username: username!,
-      first_name: first_name,
-      last_name: last_name,
-    };
-
-    await createUser(user);
+    await prisma.user.create({
+      data: {
+        clerkId: id,
+        email: email_addresses[0]?.email_address || "",
+        first_name: first_name || "",
+        last_name: last_name || "",
+      },
+    });
 
     return NextResponse.json({ message: "OK" });
   }

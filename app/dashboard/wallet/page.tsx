@@ -3,14 +3,9 @@ import TradingChart from "@/components/Chart/TradingChart";
 import BonusCard from "@/components/balance-cards/Bonus";
 import DashboardCards from "@/components/balance-cards/DashboardCards";
 import TopAssets from "@/components/balance-cards/TopAssets";
-import { formatDate } from "@/lib/format";
-import { currentUser } from "@clerk/nextjs/server";
 
 const WalletPage = async () => {
-  const auth = await currentUser();
-  let email = auth?.emailAddresses[0].emailAddress;
-
-  const user: any = await getUser(email);
+  const user: any = await getUser();
 
   return (
     <div>

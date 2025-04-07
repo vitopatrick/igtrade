@@ -7,42 +7,13 @@ import { currentUser } from "@clerk/nextjs/server";
 
 import { z } from "zod";
 
-export type userData = {
-  first_name: string | any;
-  last_name: string | any;
-  email: string;
-  clerkId: string | any;
-};
-
-// create user
-async function createUser(userData: userData) {
-  try {
-    const user = await prisma.users.create({
-      data: {
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        email: userData.email,
-        clerkId: userData.clerkId,
-      },
-    });
-
-    if (user) {
-      return {
-        message: "user created",
-      };
-    }
-  } catch (error) {
-    return error;
-  }
-}
-
 // Get user
 async function getUser() {
   const session = await currentUser();
   const userId = session?.id as string;
 
   try {
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         clerkId: userId,
       },
@@ -62,7 +33,7 @@ async function getUser() {
 // Get user
 async function getUserWithId(clerkId: string | any) {
   try {
-    return await prisma.users.findFirst({
+    return await prisma.user.findFirst({
       where: {
         clerkId,
       },
@@ -80,7 +51,7 @@ async function getUserWithId(clerkId: string | any) {
 // get All the users
 async function getAllUsers() {
   try {
-    return await prisma.users.findMany();
+    return await prisma.user.findMany();
   } catch (error) {
     return error;
   }
@@ -92,7 +63,7 @@ async function updateUserBalance(
   details: z.infer<typeof updateSchema>
 ) {
   try {
-    await prisma.users.update({
+    await prisma.user.update({
       where: {
         email,
       },
@@ -117,4 +88,4 @@ async function updateUserBalance(
   }
 }
 
-export { createUser, getUser, getAllUsers, getUserWithId, updateUserBalance };
+export { getUser, getAllUsers, getUserWithId, updateUserBalance };

@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const getTransactions = async (id: string) => {
   try {
-    return await prisma.transactions.findMany({
+    return await prisma.transaction.findMany({
       where: {
         user: {
           clerkId: id,
@@ -21,7 +21,7 @@ export const getTransactions = async (id: string) => {
 
 export const getAllTransactions = async () => {
   try {
-    return await prisma.transactions.findMany({
+    return await prisma.transaction.findMany({
       include: {
         user: true,
       },
@@ -38,7 +38,7 @@ export const createTransactions = async (
 ) => {
   try {
     if (values.type === "deposit") {
-      await prisma.deposits.create({
+      await prisma.deposit.create({
         data: {
           amount: +values.amount,
           clerkId: id,
@@ -50,7 +50,7 @@ export const createTransactions = async (
     }
 
     if (values.type === "withdrawal") {
-      await prisma.withdrawals.create({
+      await prisma.withdrawal.create({
         data: {
           amount: +values.amount,
           clerkId: id,
@@ -61,7 +61,7 @@ export const createTransactions = async (
       });
     }
 
-    await prisma.transactions.create({
+    await prisma.transaction.create({
       data: {
         amount: +values.amount,
         remarks: values.remarks,
@@ -83,7 +83,7 @@ export const createTransactions = async (
 export const deleteTransaction = async (id: number, type: string) => {
   try {
     if (type === "deposit") {
-      await prisma.deposits.delete({
+      await prisma.deposit.delete({
         where: {
           id,
         },
@@ -91,14 +91,14 @@ export const deleteTransaction = async (id: number, type: string) => {
     }
 
     if (type === "withdrawal") {
-      await prisma.withdrawals.delete({
+      await prisma.withdrawal.delete({
         where: {
           id,
         },
       });
     }
 
-    await prisma.transactions.delete({
+    await prisma.transaction.delete({
       where: {
         id,
       },
@@ -111,6 +111,5 @@ export const deleteTransaction = async (id: number, type: string) => {
     };
   } catch (error) {
     return error;
-    console.log(error);
   }
 };
