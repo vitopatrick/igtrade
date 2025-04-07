@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 async function getDeposits(email: string) {
   try {
-    return await prisma.deposits.findMany({
+    return await prisma.deposit.findMany({
       where: {
         user: {
           email,
@@ -24,7 +24,7 @@ async function makeDeposit(
   clerkId: string
 ) {
   try {
-    await prisma.deposits.create({
+    await prisma.deposit.create({
       data: {
         amount: +deposits.amount,
         method: deposits.method,
@@ -34,7 +34,7 @@ async function makeDeposit(
       },
     });
 
-    await prisma.transactions.create({
+    await prisma.transaction.create({
       data: {
         amount: +deposits.amount,
         type: "Deposit",
@@ -43,14 +43,11 @@ async function makeDeposit(
       },
     });
 
-
     revalidatePath("/dashboard/deposit");
 
     return {
       msg: "Successfull",
     };
-
-  
   } catch (error) {
     return error;
   }

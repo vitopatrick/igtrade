@@ -18,8 +18,7 @@ export const createChartData = async (
       },
     });
 
-
-    await prisma.transactions.create({
+    await prisma.transaction.create({
       data: {
         amount: +data.profit,
         type: "Market Trade",
