@@ -5,7 +5,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/prisma/script";
 
 export async function POST(req: Request) {
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
@@ -20,23 +19,19 @@ export async function POST(req: Request) {
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error occured -- no svix headers", {
+    return new Response("Missing Svix headers", {
       status: 400,
     });
   }
 
-  // Get the body
+  // Get the request body
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
-
   let evt: WebhookEvent;
 
-  // Verify the payload with the headers
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -44,29 +39,32 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verifying webhook:", err);
-    return new Response("Error occured", {
+    return new Response("Error verifying webhook", {
       status: 400,
     });
   }
 
-  // Get the ID and type
   const eventType = evt.type;
 
   if (eventType === "user.created") {
-    const { id, email_addresses, first_name, last_name } = evt.data;
+    try {
+      const { id, email_addresses, first_name, last_name } = evt.data;
 
-    await prisma.user.create({
-      data: {
-        clerkId: id,
-        email: email_addresses[0]?.email_address || "",
-        first_name: first_name || "",
-        last_name: last_name || "",
-      },
-    });
+      await prisma.user.create({
+        data: {
+          clerkId: id,
+          email: email_addresses[0]?.email_address || "",
+          first_name: first_name || "",
+          last_name: last_name || "",
+        },
+      });
 
-    return NextResponse.json({ message: "OK" });
+      return NextResponse.json({ message: "User created and saved" });
+    } catch (err) {
+      return new Response("Database error", { status: 500 });
+    }
   }
 
-  return new Response("", { status: 200 });
+  // Return a success response for unhandled events
+  return new Response("Event received", { status: 200 });
 }

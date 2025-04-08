@@ -11,19 +11,23 @@ export default async function Dashboard() {
 
   return (
     <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div>
-        <h4 className="uppercase">
-          Hello{" "}
-          <span className="font-bold">
-            {user?.first_name} {user.last_name}
-          </span>
-        </h4>
-      </div>
-      <div className="flex flex-col lg:flex-row gap-4 col-span-2">
-        <DashboardCards amount={user?.revenue} />
-        <TopAssets amount={user?.profit} />
-        <BonusCard amount={user?.trading_bonus} />
-      </div>
+      {user && (
+        <>
+          <div>
+            <h4 className="uppercase">
+              Hello{" "}
+              <span className="font-bold">
+                {user?.first_name} {user.last_name}
+              </span>
+            </h4>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 col-span-2">
+            <DashboardCards amount={user?.revenue} />
+            <TopAssets amount={user?.profit} />
+            <BonusCard amount={user?.trading_bonus} />
+          </div>
+        </>
+      )}
 
       {/* chart */}
       {user && <TradingChart chart={user?.chartData} />}
