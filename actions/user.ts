@@ -10,12 +10,14 @@ import { z } from "zod";
 // Get user
 async function getUser() {
   const session = await currentUser();
+
   const userId = session?.id as string;
 
   try {
     const user = await prisma.user.findFirst({
       where: {
         clerkId: userId,
+        email: session?.emailAddresses[0].emailAddress,
       },
       include: {
         chartData: true,
