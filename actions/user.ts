@@ -11,12 +11,11 @@ import { z } from "zod";
 async function getUser() {
   const session = await currentUser();
 
-  const userId = session?.id as string;
+  // const userId = session?.id as string;
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        clerkId: userId,
         email: session?.emailAddresses[0].emailAddress,
       },
       include: {
