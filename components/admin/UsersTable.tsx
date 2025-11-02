@@ -21,22 +21,27 @@ export default async function UsersTable() {
           <Link
             href={`/admin/clients/${user.id}`}
             className="flex items-center gap-4"
-            key={user.first_name}
+            key={user.id || user.email}
           >
             <Avatar className="hidden h-9 w-9 sm:flex">
               <AvatarImage src="" alt="Avatar" />
               <AvatarFallback className="uppercase">
-                {user.first_name.substring(0, 2)}
+                {user.first_name?.substring(0, 2) ||
+                  user.name?.substring(0, 2) ||
+                  user.email?.substring(0, 2) ||
+                  'U'}
               </AvatarFallback>
             </Avatar>
             <div className="grid gap-1">
               <p className="text-sm font-medium leading-none">
-                {user.first_name} {user.last_name}
+                {user.name ||
+                  `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
+                  'Unknown User'}
               </p>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
             <div className="ml-auto font-medium">
-              {formatNumber(user.revenue)}
+              {formatNumber(user.revenue || 0)}
             </div>
           </Link>
         ))}
