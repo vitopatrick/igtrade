@@ -5,13 +5,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import {
-  Bell,
   ChevronRight,
   LogOut,
+  Menu,
   Search,
   Settings,
   User,
 } from 'lucide-react'
+import { useSidebar } from '../dashboard-sidebar/SidebarContext'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +31,7 @@ const DashboardHeader = () => {
   const { data: session } = useSession()
   const router = useRouter()
   const pathname = usePathname()
+  const { setMobileOpen } = useSidebar()
 
   const handleSignOut = async () => {
     await signOut()
@@ -63,6 +65,16 @@ const DashboardHeader = () => {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
+      {/* Mobile menu button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden"
+        onClick={() => setMobileOpen(true)}
+      >
+        <Menu className="w-5 h-5" />
+      </Button>
+
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 flex-1">
         {breadcrumbs.map((crumb, index) => (
@@ -101,10 +113,10 @@ const DashboardHeader = () => {
       {/* Right section */}
       <div className="flex items-center gap-2">
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        {/* <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full" />
-        </Button>
+        </Button> */}
 
         {/* Theme toggle */}
         <ModeToggle />

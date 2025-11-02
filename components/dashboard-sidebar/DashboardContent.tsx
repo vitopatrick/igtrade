@@ -11,7 +11,10 @@ export function DashboardContent({ children }: { children: React.ReactNode }) {
     <div
       className={cn(
         'transition-all duration-300',
-        collapsed ? 'pl-16' : 'pl-64',
+        // Mobile: no padding
+        'pl-0',
+        // Desktop: padding based on collapsed state
+        collapsed ? 'lg:pl-16' : 'lg:pl-64',
       )}
     >
       <DashboardHeader />
