@@ -10,7 +10,7 @@ const cabinetGrotesk = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'TradePro - Professional Trading Platform',
+  title: 'Trade terminal - Professional Trading Platform',
   description: 'Modern professional trading platform with real-time analytics',
 }
 

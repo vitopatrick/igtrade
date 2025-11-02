@@ -65,7 +65,7 @@ export default function SignInPage() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold gradient-text">TradePro</h1>
+            <h1 className="text-2xl font-bold gradient-text">Trade terminal</h1>
           </div>
         </div>
 

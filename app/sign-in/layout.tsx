@@ -2,8 +2,8 @@ import { ThemeProvider } from '@/provider/ThemProvider'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Sign In - TradePro',
-  description: 'Sign in to your TradePro account',
+  title: 'Sign In - Trade terminal',
+  description: 'Sign in to your Trade terminal account',
 }
 
 export default function SignInLayout({

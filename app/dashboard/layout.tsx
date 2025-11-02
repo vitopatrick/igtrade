@@ -5,7 +5,7 @@ import { DashboardContent } from '@/components/dashboard-sidebar/DashboardConten
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Dashboard - TradePro',
+  title: 'Dashboard - Trade terminal',
   description: 'Professional Trading Dashboard',
 }
 

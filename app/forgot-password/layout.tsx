@@ -2,8 +2,8 @@ import { ThemeProvider } from '@/provider/ThemProvider'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Forgot Password - TradePro',
-  description: 'Reset your TradePro account password',
+  title: 'Forgot Password - Trade terminal',
+  description: 'Reset your Trade terminal account password',
 }
 
 export default function ForgotPasswordLayout({
