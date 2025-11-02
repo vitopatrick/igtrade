@@ -1,15 +1,12 @@
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { StatusBadge } from '@/components/ui/status-badge'
+import { TypeBadge } from '@/components/ui/type-badge'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -17,12 +14,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getAllTransactions } from "@/actions/transactions";
-import { formatDate, formatNumber } from "@/lib/format";
+} from '@/components/ui/table'
+import { getAllTransactions } from '@/actions/transactions'
+import { formatDate, formatNumber } from '@/lib/format'
 
 export default async function TransactionsTable() {
-  const transactions: any = await getAllTransactions();
+  const transactions: any = await getAllTransactions()
 
   return (
     <Card className="xl:col-span-2">
@@ -57,12 +54,10 @@ export default async function TransactionsTable() {
                     </div>
                   </TableCell>
                   <TableCell className="hidden xl:table-column">
-                    {transaction.type}
+                    <TypeBadge type={transaction.type} />
                   </TableCell>
                   <TableCell className="hidden xl:table-column">
-                    <Badge className="text-xs" variant="outline">
-                      {transaction.status}
-                    </Badge>
+                    <StatusBadge status={transaction.status || 'pending'} />
                   </TableCell>
                   <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
                     {formatDate(transaction.createdAt)}
@@ -77,5 +72,5 @@ export default async function TransactionsTable() {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

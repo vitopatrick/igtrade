@@ -1,19 +1,19 @@
-import { getUserWithId } from "@/actions/user";
-import CreateChartData from "@/components/admin/CreateChartData";
-import CreateTransaction from "@/components/admin/CreateTransaction";
-import EditDetails from "@/components/admin/EditDetails";
-import ProfitTable from "@/components/admin/ProfitTable";
-import TransactionsHistory from "@/components/admin/TransactionHistory";
-import BonusCard from "@/components/balance-cards/Bonus";
-import DashboardCards from "@/components/balance-cards/DashboardCards";
-import TopAssets from "@/components/balance-cards/TopAssets";
-import EmptyState from "@/components/empty-state/EmptyState";
+import { getUserWithId } from '@/actions/user'
+import CreateChartData from '@/components/admin/CreateChartData'
+import CreateTransaction from '@/components/admin/CreateTransaction'
+import EditDetails from '@/components/admin/EditDetails'
+import ProfitTable from '@/components/admin/ProfitTable'
+import TransactionsHistory from '@/components/admin/TransactionHistory'
+import BonusCard from '@/components/balance-cards/Bonus'
+import DashboardCards from '@/components/balance-cards/DashboardCards'
+import TopAssets from '@/components/balance-cards/TopAssets'
+import EmptyState from '@/components/empty-state/EmptyState'
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const user: any = await getUserWithId(params.id);
+  const user: any = await getUserWithId(params.id)
 
-  const transactions = user.transactions;
-  const chartDetails = user.chartData;
+  const transactions = user.transactions
+  const chartDetails = user.chartData
 
   return (
     <div>
@@ -22,8 +22,8 @@ export default async function Page({ params }: { params: { id: string } }) {
           <h2 className="font-bold text-2xl">
             {user.first_name} {user.last_name}
           </h2>
-          <p className="text-sm text-foreground">
-            {user.clerkId.substring(0, 4)}.... {user.clerkId.substring(10, 24)}
+          <p className="text-sm text-foreground font-mono">
+            ID: {user.id.substring(0, 8)}...
           </p>
         </div>
         <h4>{user.email}</h4>
@@ -56,5 +56,5 @@ export default async function Page({ params }: { params: { id: string } }) {
         {transactions.length > 0 && <TransactionsHistory data={transactions} />}
       </div>
     </div>
-  );
+  )
 }

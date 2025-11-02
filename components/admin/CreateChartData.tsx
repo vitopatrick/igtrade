@@ -1,15 +1,15 @@
-"use client";
-import { CalendarIcon, CandlestickChart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+'use client'
+import { CalendarIcon, CandlestickChart } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 
-import { toast } from "sonner";
+import { toast } from 'sonner'
 import {
   FormControl,
   FormField,
@@ -18,29 +18,29 @@ import {
   FormMessage,
   Form,
   FormDescription,
-} from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { profitSchema } from "@/lib/schemas";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { Calendar } from "../ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { createChartData } from "@/actions/chartData";
+} from '../ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Input } from '@/components/ui/input'
+import { profitSchema } from '@/lib/schemas'
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import { Calendar } from '../ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { createChartData } from '@/actions/chartData'
 
 export default function CreateChartData({ user }: any) {
   const form = useForm<z.infer<typeof profitSchema>>({
     resolver: zodResolver(profitSchema),
-  });
+  })
 
   async function onSubmit(values: z.infer<typeof profitSchema>) {
-    const returnText: any = await createChartData(user.clerkId, values);
+    const returnText: any = await createChartData(user.id, values)
 
     toast.success(returnText.message, {
-      description: "Updated User Balance",
-    });
+      description: 'Updated User Balance',
+    })
   }
 
   return (
@@ -85,14 +85,14 @@ export default function CreateChartData({ user }: any) {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, 'PPP')
                           ) : (
                             <span>Pick a date</span>
                           )}
@@ -106,7 +106,7 @@ export default function CreateChartData({ user }: any) {
                         selected={field.value}
                         onSelect={field.onChange}
                         disabled={(date: any) =>
-                          date > new Date() || date < new Date("1900-01-01")
+                          date > new Date() || date < new Date('1900-01-01')
                         }
                         initialFocus
                       />
@@ -127,5 +127,5 @@ export default function CreateChartData({ user }: any) {
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

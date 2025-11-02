@@ -1,11 +1,11 @@
-import { getAllUsers } from "@/actions/user";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatNumber } from "@/lib/format";
-import Link from "next/link";
+import { getAllUsers } from '@/actions/user'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { formatNumber } from '@/lib/format'
+import Link from 'next/link'
 
 export default async function UsersTable() {
-  const users: any = await getAllUsers();
+  const users: any = await getAllUsers()
 
   return (
     <Card>
@@ -15,7 +15,7 @@ export default async function UsersTable() {
       <CardContent className="grid gap-8">
         {users.map((user: any) => (
           <Link
-            href={`/admin/clients/${user.clerkId}`}
+            href={`/admin/clients/${user.id}`}
             className="flex items-center gap-4"
             key={user.first_name}
           >
@@ -38,5 +38,5 @@ export default async function UsersTable() {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 }

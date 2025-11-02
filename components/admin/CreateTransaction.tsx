@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 
-import { toast } from "sonner";
+import { toast } from 'sonner'
 import {
   FormControl,
   FormField,
@@ -17,11 +17,11 @@ import {
   FormLabel,
   FormMessage,
   Form,
-} from "../ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
+} from '../ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -29,34 +29,34 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { TransactionSchema } from "@/lib/schemas";
-import { createTransactions } from "@/actions/transactions";
+} from '../ui/select'
+import { TransactionSchema } from '@/lib/schemas'
+import { createTransactions } from '@/actions/transactions'
 
 const CreateTransaction = ({ user }: any) => {
   const form = useForm<z.infer<typeof TransactionSchema>>({
     resolver: zodResolver(TransactionSchema),
     defaultValues: {
-      amount: "",
-      remarks: "",
-      type: "",
-      deposit_method: "",
+      amount: '',
+      remarks: '',
+      type: '',
+      deposit_method: '',
     },
-  });
+  })
 
   // watch the type
-  const type = form.watch("type");
+  const type = form.watch('type')
 
   async function onSubmit(values: z.infer<typeof TransactionSchema>) {
     const returnText: any = await createTransactions(
       user.email,
       values,
-      user.clerkId
-    );
+      user.id,
+    )
 
     toast.success(returnText.message, {
-      description: "Updated User Balance",
-    });
+      description: 'Updated User Balance',
+    })
   }
 
   return (
@@ -120,7 +120,7 @@ const CreateTransaction = ({ user }: any) => {
               />
             </div>
 
-            {type === "deposit" && (
+            {type === 'deposit' && (
               <div>
                 <FormField
                   control={form.control}
@@ -182,7 +182,7 @@ const CreateTransaction = ({ user }: any) => {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default CreateTransaction;
+export default CreateTransaction

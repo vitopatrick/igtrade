@@ -1,31 +1,83 @@
-import React from "react";
+'use client'
+
+import React from 'react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ExternalLink, Clock } from 'lucide-react'
 
 const NewsCards = ({ article }: any) => {
-  return (
-    <div className="shadow-sm border rounded-xl p-6">
-      <img
-        className="lg:h-60 xl:h-56 md:h-64 sm:h-72 xs:h-72 h-72 rounded w-full object-cover object-center mb-6"
-        src={article.image}
-        alt="Image Size 720x400"
-      />
-      <h3 className="tracking-widest text-indigo-500 text-xs font-medium title-font uppercase">
-        {article.category}
-      </h3>
-      <h2 className="text-lg text-gray-900 dark:text-white font-medium title-font mb-4 line-clamp-2">
-        {article.headline}
-      </h2>
-      <p className="leading-relaxed text-base line-clamp-2 text-neutral-500">
-        {article.summary}
-      </p>
-      <a
-        href={article.url}
-        target="_blank"
-        className="text-purple-600 underline mt-4 inline-block"
-      >
-        Read More
-      </a>
-    </div>
-  );
-};
+  const timeAgo = (timestamp: number) => {
+    const now = Date.now() / 1000
+    const diff = now - timestamp
+    const hours = Math.floor(diff / 3600)
+    if (hours < 24) return `${hours}h ago`
+    const days = Math.floor(hours / 24)
+    return `${days}d ago`
+  }
 
-export default NewsCards;
+  return (
+    <Card className="border-border/50 hover:shadow-lg transition-all group overflow-hidden h-full flex flex-col">
+      <div className="relative overflow-hidden">
+        <img
+          className="h-48 w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+          src={article.image}
+          alt={article.headline}
+          onError={(e) => {
+            ;(e.target as HTMLImageElement).src =
+              'https://via.placeholder.com/400x300?text=No+Image'
+          }}
+        />
+        <div className="absolute top-3 left-3">
+          <Badge className="bg-primary/90 backdrop-blur-sm">
+            {article.category || 'General'}
+          </Badge>
+        </div>
+      </div>
+
+      <CardHeader className="flex-1">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+          <Clock className="w-3 h-3" />
+          <span>{timeAgo(article.datetime)}</span>
+          {article.source && (
+            <>
+              <span>•</span>
+              <span className="font-medium">{article.source}</span>
+            </>
+          )}
+        </div>
+        <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">
+          {article.headline}
+        </CardTitle>
+        <CardDescription className="line-clamp-3 mt-2">
+          {article.summary}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <a
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full"
+        >
+          <Button
+            variant="outline"
+            className="w-full group/btn hover:bg-primary hover:text-primary-foreground"
+          >
+            Read Full Article
+            <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
+          </Button>
+        </a>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default NewsCards

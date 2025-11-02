@@ -1,56 +1,62 @@
-"use server";
+'use server'
 
-import { prisma } from "@/prisma/script";
-import { z } from "zod";
-import { depositFormSchema } from "@/lib/schemas";
-import { revalidatePath } from "next/cache";
+import { db } from '@/db'
+import { deposits, transactions, users } from '@/db/schema'
+import { z } from 'zod'
+import { depositFormSchema } from '@/lib/schemas'
+import { revalidatePath } from 'next/cache'
+import { eq } from 'drizzle-orm'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 
-async function getDeposits(email: string) {
+async function getDeposits(userId: string) {
   try {
-    return await prisma.deposit.findMany({
-      where: {
-        user: {
-          email,
-        },
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, userId),
+      with: {
+        deposits: true,
       },
-    });
+    })
+
+    return user?.deposits || []
   } catch (error) {
-    return error;
+    return error
   }
 }
 
-async function makeDeposit(
-  deposits: z.infer<typeof depositFormSchema>,
-  clerkId: string
-) {
+async function makeDeposit(depositData: z.infer<typeof depositFormSchema>) {
+  const session = await auth.api.getSession({
+    headers: headers(),
+  })
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
   try {
-    await prisma.deposit.create({
-      data: {
-        amount: +deposits.amount,
-        method: deposits.method,
-        remarks: deposits.remarks,
-        clerkId,
-        status: "pending",
-      },
-    });
+    await db.insert(deposits).values({
+      amount: +depositData.amount,
+      method: depositData.method,
+      remarks: depositData.remarks,
+      userId: session.user.id,
+      status: 'pending',
+    })
 
-    await prisma.transaction.create({
-      data: {
-        amount: +deposits.amount,
-        type: "Deposit",
-        remarks: deposits.remarks,
-        clerkId,
-      },
-    });
+    await db.insert(transactions).values({
+      amount: +depositData.amount,
+      type: 'Deposit',
+      remarks: depositData.remarks,
+      userId: session.user.id,
+    })
 
-    revalidatePath("/dashboard/deposit");
+    revalidatePath('/dashboard/deposit')
 
     return {
-      msg: "Successfull",
-    };
+      msg: 'Successfull',
+    }
   } catch (error) {
-    return error;
+    return error
   }
 }
 
-export { getDeposits, makeDeposit };
+export { getDeposits, makeDeposit }

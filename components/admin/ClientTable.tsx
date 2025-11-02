@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate, formatNumber } from "@/lib/format";
-import Link from "next/link";
+} from '@/components/ui/table'
+import { formatDate, formatNumber } from '@/lib/format'
+import Link from 'next/link'
 
 const ClientTable = ({ users }: any) => {
   return (
@@ -28,7 +28,7 @@ const ClientTable = ({ users }: any) => {
             {users.map((user: any) => (
               <TableRow className="bg-accent" key={user.id}>
                 <TableCell>
-                  <Link href={`/admin/clients/${user.clerkId}`}>
+                  <Link href={`/admin/clients/${user.id}`}>
                     <div className="font-medium">
                       {user.first_name} {user.last_name}
                     </div>
@@ -55,7 +55,7 @@ const ClientTable = ({ users }: any) => {
         </Table>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ClientTable;
+export default ClientTable

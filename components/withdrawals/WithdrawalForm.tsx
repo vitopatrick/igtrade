@@ -1,5 +1,6 @@
-"use client";
+'use client'
 
+import { useState } from 'react'
 import {
   FormControl,
   FormDescription,
@@ -8,95 +9,149 @@ import {
   FormLabel,
   FormMessage,
   Form,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../ui/button";
-import { withdrawalSchema } from "@/lib/schemas";
-import { z } from "zod";
+} from '../ui/form'
+import { Input } from '../ui/input'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '../ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../ui/card'
+import { Badge } from '../ui/badge'
+import { withdrawalSchema } from '@/lib/schemas'
+import { z } from 'zod'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { createWithdrawals } from "@/actions/withdrawal";
-import { useAuth } from "@clerk/nextjs";
+} from '../ui/select'
+import { createWithdrawals } from '@/actions/withdrawal'
+import { toast } from 'sonner'
+import { Bitcoin, Wallet, CheckCircle2 } from 'lucide-react'
 
 const WithdrawalForm = () => {
-  const auth: any = useAuth();
-
-  // account, routing number, bank name,benifi name
+  const [copied, setCopied] = useState(false)
 
   const form = useForm<z.infer<typeof withdrawalSchema>>({
     resolver: zodResolver(withdrawalSchema),
     defaultValues: {
-      amount: "",
-      method: "",
-      remarks: "",
-      address: "",
-      payPal: "",
+      amount: '',
+      method: '',
+      remarks: '',
+      address: '',
+      payPal: '',
     },
-  });
+  })
 
-  const method = form.watch("method");
-
-  const methods = ["btc", "eth"];
+  const method = form.watch('method')
+  const methods = ['btc', 'eth']
 
   async function onSubmit(values: z.infer<typeof withdrawalSchema>) {
-    await createWithdrawals(values, auth.userId);
+    try {
+      const result = (await createWithdrawals(values)) as any
+      if (result && result.message) {
+        toast.success(result.message)
+        form.reset()
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to submit withdrawal')
+    }
   }
 
+  const cryptos = [
+    { value: 'btc', label: 'Bitcoin', symbol: 'BTC', color: 'bg-orange-500' },
+    { value: 'eth', label: 'Ethereum', symbol: 'ETH', color: 'bg-blue-500' },
+  ]
+
   return (
-    <div className="p-4 lg:flex-1 w-full">
-      <h3 className="my-4 text-xl underline">Withdrawal Form</h3>
-      <div>
+    <Card className="border-border/50 h-fit">
+      <CardHeader>
+        <CardTitle>Request Withdrawal</CardTitle>
+        <CardDescription>
+          Fill in the details to withdraw funds from your account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {/* Deposit Amount */}
-            <div>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Step 1: Amount */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                  1
+                </div>
+                <h3 className="font-semibold">Withdrawal Amount</h3>
+              </div>
               <FormField
                 control={form.control}
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Withdrawal Amount</FormLabel>
+                    <FormLabel>Amount (USD)</FormLabel>
                     <FormControl>
-                      <Input placeholder="$10000" {...field} />
+                      <Input
+                        placeholder="10000"
+                        {...field}
+                        className="h-12 text-lg"
+                      />
                     </FormControl>
                     <FormDescription>
-                      please enter amount you'd wish to deposit
+                      Enter the amount you wish to withdraw
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            {/* Deposit Method */}
-            <div>
+
+            {/* Step 2: Method */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                  2
+                </div>
+                <h3 className="font-semibold">Withdrawal Method</h3>
+              </div>
               <FormField
                 control={form.control}
                 name="method"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Select Deposit Method</FormLabel>
+                    <FormLabel>Payment Method</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a Method" />
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Select withdrawal method" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="btc">Bitcoin</SelectItem>
-                          <SelectItem value="eth">Ethereum</SelectItem>
-
-                          <SelectItem value="paypal">Paypal</SelectItem>
-                        </SelectGroup>
+                        {cryptos.map((crypto) => (
+                          <SelectItem key={crypto.value} value={crypto.value}>
+                            <div className="flex items-center gap-2">
+                              <Bitcoin className="w-4 h-4" />
+                              <span>{crypto.label}</span>
+                              <Badge
+                                variant="secondary"
+                                className={`${crypto.color} text-white`}
+                              >
+                                {crypto.symbol}
+                              </Badge>
+                            </div>
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="paypal">
+                          <div className="flex items-center gap-2">
+                            <Wallet className="w-4 h-4" />
+                            <span>PayPal</span>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -104,36 +159,26 @@ const WithdrawalForm = () => {
                 )}
               />
             </div>
-            {/* Wallet Address */}
+
+            {/* Wallet Address for Crypto */}
             {methods.includes(method) && (
-              <div>
+              <div className="space-y-4">
                 <FormField
                   control={form.control}
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Wallet Address</FormLabel>
+                      <FormLabel>Your Wallet Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="Wallet Address..." {...field} />
+                        <Input
+                          placeholder="Enter your wallet address"
+                          {...field}
+                          className="h-12 font-mono text-sm"
+                        />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            )}
-            {/* Paypal Name */}
-            {method == "paypal" && (
-              <div>
-                <FormField
-                  control={form.control}
-                  name="payPal"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>PayPal Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="PayPal Name..." {...field} />
-                      </FormControl>
+                      <FormDescription>
+                        Funds will be sent to this address
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -141,16 +186,52 @@ const WithdrawalForm = () => {
               </div>
             )}
 
-            {/* Deposit Remarks */}
-            <div>
+            {/* PayPal Name */}
+            {method === 'paypal' && (
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="payPal"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>PayPal Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="your@email.com"
+                          {...field}
+                          className="h-12"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter your PayPal email address
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+
+            {/* Step 3: Remarks */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                  3
+                </div>
+                <h3 className="font-semibold">Transaction Details</h3>
+              </div>
               <FormField
                 control={form.control}
                 name="remarks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Transaction Remarks</FormLabel>
+                    <FormLabel>Remarks (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="First Deposit..." {...field} />
+                      <Input
+                        placeholder="e.g., First withdrawal"
+                        {...field}
+                        className="h-12"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -158,14 +239,18 @@ const WithdrawalForm = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full block">
-              Submit
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              className="w-full h-12 text-base bg-gradient-to-r from-primary to-purple-600 hover:opacity-90"
+            >
+              Request Withdrawal
             </Button>
           </form>
         </Form>
-      </div>
-    </div>
-  );
-};
+      </CardContent>
+    </Card>
+  )
+}
 
-export default WithdrawalForm;
+export default WithdrawalForm

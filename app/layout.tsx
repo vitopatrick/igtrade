@@ -1,29 +1,30 @@
-import type { Metadata } from "next";
-import { Quicksand } from "next/font/google";
-import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from 'next'
+import localFont from 'next/font/local'
+import './globals.css'
+import { Toaster } from '@/components/ui/sonner'
 
-const sans = Quicksand({ subsets: ["latin"] });
+const cabinetGrotesk = localFont({
+  src: '../fonts/CabinetGrotesk-Variable.ttf',
+  variable: '--font-cabinet',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: "Trading Platform",
-  description: "Welcome to Our Trading Platform",
-};
+  title: 'TradePro - Professional Trading Platform',
+  description: 'Modern professional trading platform with real-time analytics',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={sans.className}>
-          {children}
-          <Toaster position="bottom-center" richColors />
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${cabinetGrotesk.variable} font-sans antialiased`}>
+        {children}
+        <Toaster position="bottom-center" richColors />
+      </body>
+    </html>
+  )
 }

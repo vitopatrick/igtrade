@@ -1,40 +1,73 @@
-import React from "react";
+import React from 'react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { FileSearch, Inbox, TrendingUp, Plus } from 'lucide-react'
+import Link from 'next/link'
 
-const EmptyState = () => {
+interface EmptyStateProps {
+  icon?: 'search' | 'inbox' | 'chart'
+  title?: string
+  description?: string
+  action?: {
+    label: string
+    href: string
+  }
+}
+
+const EmptyState = ({
+  icon = 'inbox',
+  title = 'No data yet',
+  description = 'Get started by creating your first transaction',
+  action,
+}: EmptyStateProps) => {
+  const IconComponent = {
+    search: FileSearch,
+    inbox: Inbox,
+    chart: TrendingUp,
+  }[icon]
+
   return (
-    <div className="w-full col-span-2 flex items-center flex-wrap justify-center gap-10 my-[10%] ">
-      <div className="grid gap-4 w-60">
-        <div className="w-20 h-20 mx-auto bg-gray-50 rounded-full shadow-sm justify-center items-center inline-flex">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="33"
-            height="32"
-            viewBox="0 0 33 32"
-            fill="none"
-          >
-            <g id="File Serch">
-              <path
-                id="Vector"
-                d="M19.9762 4V8C19.9762 8.61954 19.9762 8.92931 20.0274 9.18691C20.2379 10.2447 21.0648 11.0717 22.1226 11.2821C22.3802 11.3333 22.69 11.3333 23.3095 11.3333H27.3095M18.6429 19.3333L20.6429 21.3333M19.3095 28H13.9762C10.205 28 8.31934 28 7.14777 26.8284C5.9762 25.6569 5.9762 23.7712 5.9762 20V12C5.9762 8.22876 5.9762 6.34315 7.14777 5.17157C8.31934 4 10.205 4 13.9762 4H19.5812C20.7604 4 21.35 4 21.8711 4.23403C22.3922 4.46805 22.7839 4.90872 23.5674 5.79006L25.9624 8.48446C26.6284 9.23371 26.9614 9.60833 27.1355 10.0662C27.3095 10.524 27.3095 11.0253 27.3095 12.0277V20C27.3095 23.7712 27.3095 25.6569 26.138 26.8284C24.9664 28 23.0808 28 19.3095 28ZM19.3095 16.6667C19.3095 18.5076 17.8171 20 15.9762 20C14.1352 20 12.6429 18.5076 12.6429 16.6667C12.6429 14.8257 14.1352 13.3333 15.9762 13.3333C17.8171 13.3333 19.3095 14.8257 19.3095 16.6667Z"
-                stroke="#4F46E5"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </g>
-          </svg>
+    <Card className="border-border/50 w-full">
+      <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        {/* Animated Icon Circle */}
+        <div className="relative mb-6">
+          {/* Pulse rings */}
+          <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+          <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse" />
+          
+          {/* Icon container */}
+          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center backdrop-blur-sm border border-primary/30">
+            <IconComponent className="w-10 h-10 text-primary" strokeWidth={1.5} />
+          </div>
         </div>
-        <div>
-          <h2 className="text-center text-black text-base font-semibold leading-relaxed pb-1 dark:text-white">
-            No Transactions yet
-          </h2>
-          <p className="text-center text-black text-sm font-normal leading-snug pb-4 dark:text-white">
-            Create one today
+
+        {/* Text Content */}
+        <div className="space-y-2 mb-6">
+          <h3 className="text-xl font-semibold tracking-tight">
+            {title}
+          </h3>
+          <p className="text-muted-foreground text-sm max-w-sm mx-auto">
+            {description}
           </p>
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default EmptyState;
+        {/* Action Button */}
+        {action && (
+          <Link href={action.href}>
+            <Button className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:opacity-90">
+              <Plus className="w-4 h-4" />
+              {action.label}
+            </Button>
+          </Link>
+        )}
+
+        {/* Decorative elements */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-primary/20 animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 rounded-full bg-purple-500/20 animate-pulse delay-150" />
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 rounded-full bg-primary/30 animate-pulse delay-300" />
+      </CardContent>
+    </Card>
+  )
+}
+
+export default EmptyState

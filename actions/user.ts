@@ -1,92 +1,84 @@
-"use server";
+'use server'
 
-import { updateSchema } from "@/lib/schemas";
-import { prisma } from "@/prisma/script";
-import { revalidatePath } from "next/cache";
-import { currentUser } from "@clerk/nextjs/server";
-
-import { z } from "zod";
+import { updateSchema } from '@/lib/schemas'
+import { db } from '@/db'
+import { users, chartData, transactions, deposits } from '@/db/schema'
+import { revalidatePath } from 'next/cache'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { eq, sql } from 'drizzle-orm'
+import { z } from 'zod'
 
 // Get user
 async function getUser() {
-  const session = await currentUser();
+  const session = await auth.api.getSession({
+    headers: headers(),
+  })
 
-  // const userId = session?.id as string;
+  if (!session) return null
 
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: session?.emailAddresses[0].emailAddress,
-      },
-      include: {
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.user.id),
+      with: {
         chartData: true,
         transactions: true,
         deposits: true,
       },
-    });
+    })
 
-    if (user) return user;
+    if (user) return user
   } catch (error) {
-    return error;
+    return error
   }
 }
 
-// Get user
-async function getUserWithId(clerkId: string | any) {
+// Get user by ID
+async function getUserWithId(userId: string) {
   try {
-    return await prisma.user.findFirst({
-      where: {
-        clerkId,
-      },
-      include: {
+    return await db.query.users.findFirst({
+      where: eq(users.id, userId),
+      with: {
         chartData: true,
         transactions: true,
         deposits: true,
       },
-    });
+    })
   } catch (error) {
-    return error;
+    return error
   }
 }
 
 // get All the users
 async function getAllUsers() {
   try {
-    return await prisma.user.findMany();
+    return await db.select().from(users)
   } catch (error) {
-    return error;
+    return error
   }
 }
 
 // update user profit
 async function updateUserBalance(
   email: string,
-  details: z.infer<typeof updateSchema>
+  details: z.infer<typeof updateSchema>,
 ) {
   try {
-    await prisma.user.update({
-      where: {
-        email,
-      },
-      data: {
-        profit: {
-          increment: +details.profit,
-        },
-        revenue: {
-          increment: +details.revenue,
-        },
-        trading_bonus: {
-          increment: +details.trading_bonus,
-        },
-      },
-    });
+    await db
+      .update(users)
+      .set({
+        profit: sql`${users.profit} + ${+details.profit}`,
+        revenue: sql`${users.revenue} + ${+details.revenue}`,
+        trading_bonus: sql`${users.trading_bonus} + ${+details.trading_bonus}`,
+      })
+      .where(eq(users.email, email))
 
-    revalidatePath("/admin");
+    revalidatePath('/admin')
 
-    return { message: "Update done" };
+    return { message: 'Update done' }
   } catch (error) {
-    return error;
+    return error
   }
 }
 
-export { getUser, getAllUsers, getUserWithId, updateUserBalance };
+export { getUser, getAllUsers, getUserWithId, updateUserBalance }

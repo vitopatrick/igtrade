@@ -3,65 +3,95 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-
+} from '@/components/ui/accordion'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
     id: 1,
-    question: "How many confirmations do i need?",
+    question: 'How long does a withdrawal take?',
     answer:
-      "he deposit transaction will be automatic, and the Bitcoin transfer will need to be confirmed by the entire Bitcoin network, and your Bitcoin will be automatically deposited to your account after 6 confirmation",
+      'We try to process all withdrawal requests within 30 minutes. However, withdrawals can take up to 2-3 hours to process when many transactions are taking place on the blockchain network.',
   },
   {
     id: 2,
-    question: "What is the minimum deposit",
-    answer: "The deposit amount must be between $5 – $5,000 per trade.",
+    question: 'What is the minimum withdrawal amount?',
+    answer:
+      'The minimum withdrawal amount is $50. Maximum withdrawal per transaction is $50,000.',
   },
   {
     id: 3,
-    question: "How long does it take to deposit",
+    question: 'Are there any withdrawal fees?',
     answer:
-      "Once there are enough confirmations on the blockchain, the system will start proceeding your deposit. This can take up to 2-3 hours.",
+      'We charge a small processing fee of 2% on all withdrawals to cover blockchain network fees and processing costs.',
   },
   {
     id: 4,
-    question: "Can i deposit without verification?",
+    question: 'Do I need to verify my account?',
     answer:
-      "Although you can technically use the platform even without verifying your identity, a withdrawal limit will be imposed on you until you undergo the verification process",
+      'Yes, account verification is required for withdrawals. This helps us ensure the security of your funds and comply with regulatory requirements.',
   },
   {
     id: 5,
-    question: "Why is my deposit taking so long?",
+    question: 'Why is my withdrawal pending?',
     answer:
-      "Sometimes, there can be delays in the time needed for our system to record your deposit. If you still haven't received your deposit after the allotted time frame, please contact our online support and provide the following info",
+      'Withdrawals may be pending for security verification, especially for first-time withdrawals or large amounts. Our team reviews these manually to protect your account.',
   },
   {
     id: 6,
-    question: "How long does Usdt deposit ?",
+    question: 'How many confirmations are needed?',
     answer:
-      "Sometimes, there can be delays in the time needed for our system to record your deposit. If you still haven't received your deposit after the allotted time frame, please contact our online support and provide the following info",
+      'Bitcoin withdrawals need 3 confirmations, Ethereum needs 12, and USDT (both ERC20 and TRC20) needs 12 confirmations on their respective networks.',
   },
   {
     id: 7,
-    question: "How long does it take to receive BTC ?",
+    question: 'Can I cancel a withdrawal?',
     answer:
-      "we try to process all withdrawal requests within 30 minutes. However, withdrawals can take up to 2-3 hours to process when many transactions are taking place on a certain blockchain network.",
+      'You can cancel a withdrawal request if it\'s still in "Pending" status. Once it\'s marked as "Processing" or "Completed", it cannot be canceled.',
   },
-];
+]
 
 export function WithdrawalFaq() {
   return (
-    <div className="flex-1 w-full">
-      <h3 className="my-4 text-xl underline">Faq</h3>
-      <Accordion type="single" collapsible className="w-full">
-        {faqs.map((faq) => (
-          <AccordionItem value={faq.id.toString()} key={faq.id}>
-            <AccordionTrigger>{faq.question}</AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </div>
-  );
+    <Card className="border-border/50 h-fit">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <HelpCircle className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <CardTitle>Frequently Asked Questions</CardTitle>
+            <CardDescription>
+              Everything you need to know about withdrawals
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Accordion type="single" collapsible className="w-full">
+          {faqs.map((faq) => (
+            <AccordionItem
+              value={faq.id.toString()}
+              key={faq.id}
+              className="border-border/50"
+            >
+              <AccordionTrigger className="text-left hover:text-primary transition-colors hover:no-underline">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </CardContent>
+    </Card>
+  )
 }

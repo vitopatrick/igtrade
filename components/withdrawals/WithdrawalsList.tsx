@@ -1,11 +1,11 @@
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from '@/components/ui/status-badge'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -13,14 +13,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate } from "@/lib/format";
+} from '@/components/ui/table'
+import { formatDate } from '@/lib/format'
 
 export default function WithdrawalsList({ data }: any) {
   return (
-    <Card className="my-5 shadow-none border-none p-0 mx-0">
-      <CardHeader className="px-7">
-        <CardTitle className="text-lg">Withdrawals</CardTitle>
+    <Card className="border-border/50">
+      <CardHeader>
+        <CardTitle>Withdrawal History</CardTitle>
         <CardDescription>Recent withdrawals from your account.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -36,7 +36,7 @@ export default function WithdrawalsList({ data }: any) {
           </TableHeader>
           <TableBody>
             {data.map((info: any, index: number) => (
-              <TableRow key={index}>
+              <TableRow key={index} className="hover:bg-muted/50">
                 <TableCell>
                   <div className="font-medium">{info.remarks}</div>
                 </TableCell>
@@ -44,19 +44,19 @@ export default function WithdrawalsList({ data }: any) {
                   {info.method}
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
-                  <Badge className="text-xs capitalize" variant="secondary">
-                    {info.status}
-                  </Badge>
+                  <StatusBadge status={info.status} />
                 </TableCell>
-                <TableCell className="hidden md:table-cell">
+                <TableCell className="hidden md:table-cell text-muted-foreground">
                   {formatDate(info.createdAt)}
                 </TableCell>
-                <TableCell className="text-right">${info.amount}</TableCell>
+                <TableCell className="text-right font-semibold">
+                  ${info.amount.toLocaleString()}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
-  );
+  )
 }
