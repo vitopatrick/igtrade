@@ -1,11 +1,13 @@
-import Footer from "@/components/home/Footer";
-import NavigationBar from "@/components/home/Nabar";
-import { BottomHeader } from "@/components/shared/BottomHeader";
-import PageHeader from "@/components/shared/PageHeader";
-import Timeline from "@/components/timeline/TImeline";
-import React from "react";
+import Footer from '@/components/home/Footer'
+import NavigationBar from '@/components/home/Nabar'
+import { BottomHeader } from '@/components/shared/BottomHeader'
+import PageHeader from '@/components/shared/PageHeader'
+import dynamic from 'next/dynamic'
+import React from 'react'
 
-;
+const Timeline = dynamic(() => import('@/components/timeline/TImeline'), {
+  ssr: false,
+})
 
 const TimelinePage = () => {
   return (
@@ -26,7 +28,7 @@ const TimelinePage = () => {
       <BottomHeader />
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default TimelinePage;
+export default TimelinePage

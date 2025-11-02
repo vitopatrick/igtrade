@@ -20,6 +20,7 @@ import { formatDate, formatNumber } from '@/lib/format'
 
 export default async function TransactionsTable() {
   const transactions: any = await getAllTransactions()
+  const transactionsList = Array.isArray(transactions) ? transactions : []
 
   return (
     <Card className="xl:col-span-2">
@@ -30,8 +31,8 @@ export default async function TransactionsTable() {
         </div>
       </CardHeader>
       <CardContent>
-        {transactions.length < 1 && <div>No Transactions</div>}
-        {transactions.length > 1 && (
+        {transactionsList.length < 1 && <div>No Transactions</div>}
+        {transactionsList.length > 0 && (
           <Table>
             <TableHeader>
               <TableRow>
@@ -43,7 +44,7 @@ export default async function TransactionsTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.map((transaction: any) => (
+              {transactionsList.map((transaction: any) => (
                 <TableRow key={transaction.first_name}>
                   <TableCell>
                     <div className="font-medium">

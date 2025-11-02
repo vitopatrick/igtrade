@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 export default async function UsersTable() {
   const users: any = await getAllUsers()
+  const usersList = Array.isArray(users) ? users : []
 
   return (
     <Card>
@@ -13,7 +14,10 @@ export default async function UsersTable() {
         <CardTitle>Recent Sign Ups</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-8">
-        {users.map((user: any) => (
+        {usersList.length === 0 && (
+          <p className="text-sm text-muted-foreground">No users yet</p>
+        )}
+        {usersList.map((user: any) => (
           <Link
             href={`/admin/clients/${user.id}`}
             className="flex items-center gap-4"
