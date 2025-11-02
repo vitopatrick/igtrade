@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "npm install --legacy-peer-deps || true",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -15,7 +16,6 @@
   "dependencies": {
     "@better-fetch/fetch": "^1.1.18",
     "@hookform/resolvers": "^3.6.0",
-    "@libsql/client": "^0.6.2",
     "@neondatabase/serverless": "^0.9.5",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.0",
