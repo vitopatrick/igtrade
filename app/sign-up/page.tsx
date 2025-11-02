@@ -80,10 +80,6 @@ export default function SignUpPage() {
         email: formData.email,
         password: formData.password,
         name: `${formData.firstName} ${formData.lastName}`,
-        data: {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-        },
       })
 
       toast.success('Account created successfully!', {
