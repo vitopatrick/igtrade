@@ -1,6 +1,7 @@
 import { Sidebar } from '@/components/dashboard-sidebar/Sidebar'
-import DashboardHeader from '@/components/dashboard-header/Header'
 import { ThemeProvider } from '@/provider/ThemProvider'
+import { SidebarProvider } from '@/components/dashboard-sidebar/SidebarContext'
+import { DashboardContent } from '@/components/dashboard-sidebar/DashboardContent'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -17,20 +18,15 @@ export default function DashboardLayout({
     <ThemeProvider
       attribute="class"
       defaultTheme="dark"
-      enableSystem
+      enableSystem={false}
       disableTransitionOnChange
     >
-      <div className="min-h-screen bg-background">
-        <Sidebar />
-
-        <div className="pl-16 lg:pl-64 transition-all duration-300">
-          <DashboardHeader />
-
-          <main className="p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">{children}</div>
-          </main>
+      <SidebarProvider>
+        <div className="min-h-screen bg-background">
+          <Sidebar />
+          <DashboardContent>{children}</DashboardContent>
         </div>
-      </div>
+      </SidebarProvider>
     </ThemeProvider>
   )
 }

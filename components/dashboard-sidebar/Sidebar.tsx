@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useSidebar } from './SidebarContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -62,7 +62,7 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+  const { collapsed, setCollapsed } = useSidebar()
 
   return (
     <aside
