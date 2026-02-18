@@ -20,6 +20,9 @@ export const sendWelcomeEmail = async (email: string, password: string, name: st
         <p style="font-size: 16px; color: #555;">
           To get started with your trading journey, please contact your <strong>Account Manager</strong> for further instructions and platform orientation.
         </p>
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="https://www.rjobrienhub.org/sign-in" style="display: inline-block; padding: 12px 30px; background-color: #16a34a; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">Login to Your Account</a>
+        </div>
         <p style="font-size: 14px; color: #888; margin-top: 30px; text-align: center;">
           If you didn't create this account, please ignore this email.
         </p>
