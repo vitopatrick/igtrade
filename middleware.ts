@@ -14,7 +14,7 @@ export default async function authMiddleware(request: NextRequest) {
   )
 
   // Protected routes
-  const protectedRoutes = ['/dashboard', '/admin']
+  const protectedRoutes = ['/dashboard', ]
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route),
   )
