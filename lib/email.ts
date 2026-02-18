@@ -6,7 +6,7 @@ export const sendWelcomeEmail = async (email: string, password: string, name: st
   const subject = 'Welcome to Rjobrien - Your Account Credentials';
   const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
-        <h2 style="color: #333; text-align: center;">Welcome to Trade Terminal, ${name}!</h2>
+        <h2 style="color: #333; text-align: center;">Welcome to Rjobrien, ${name}!</h2>
         <p style="font-size: 16px; color: #555;">
           Your account has been successfully created. Here are your login credentials:
         </p>
@@ -37,7 +37,7 @@ export const sendWelcomeEmail = async (email: string, password: string, name: st
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'Trade Terminal <onboarding@mail.rjobrienhub.org>',
+      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
       to: email,
       subject: subject,
       html: html,

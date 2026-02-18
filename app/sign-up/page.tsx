@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { signUp } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -76,14 +76,38 @@ export default function SignUpPage() {
     setIsLoading(true)
 
     try {
-      await signUp.email({
+      const result = await signUp.email({
         email: formData.email,
         password: formData.password,
         name: `${formData.firstName} ${formData.lastName}`,
       })
 
+      
+
+      if (result.error) {
+        toast.error('Failed to create account', {
+          description: result.error.message || 'Please try again later.',
+        })
+        return
+      }
+
+      // Send welcome email via API route
+   
+      fetch('/api/send-welcome-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: `${formData.firstName} ${formData.lastName}`,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log('response:'))
+        .catch((err) => console.error(' error:'))
+
       toast.success('Account created successfully!', {
-        description: 'Welcome to Trade terminal. Redirecting...',
+        description: 'Welcome to Rjobrien. Redirecting...',
       })
 
       router.push('/dashboard')

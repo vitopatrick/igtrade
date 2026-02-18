@@ -1,11 +1,7 @@
-import { betterAuth, BetterAuthOptions } from 'better-auth'
+import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { db } from '@/db'
 import * as schema from '@/db/schema'
-import { createAuthMiddleware } from 'better-auth/api'
-import { sendWelcomeEmail } from './email'
-
-const passwordMap = new WeakMap<any, string>()
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -21,45 +17,12 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
   },
-  plugins: [
-    {
-      id: 'welcome-email',
-      endpoints: {
-        'sign-up/email': {
-          path: '/sign-up/email',
-          method: 'POST',
-          use: [
-            createAuthMiddleware(async (ctx) => {
-              // Capture password before hashing
-              const body = ctx.body as any
-              if (body?.password) {
-                passwordMap.set(ctx.request, body.password)
-              }
-            }),
-          ],
-          after: async (ctx: any) => {
-            const user = ctx.context.user
-            const plainPassword = passwordMap.get(ctx.request)
-            if (user && plainPassword) {
-              // Background task to send email
-              sendWelcomeEmail(
-                user.email,
-                plainPassword,
-                user.name || user.first_name || 'Trader',
-              ).catch((err) => console.error('Failed to send welcome email:', err))
-            }
-          },
-        },
-      },
-    } as any,
-  ],
   user: {
     additionalFields: {
       first_name: {
         type: 'string',
         required: false,
       },
-// ... truncated for brevity, I'll keep the existing fields
       last_name: {
         type: 'string',
         required: false,
