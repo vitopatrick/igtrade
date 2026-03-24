@@ -42,6 +42,7 @@ async function getUserWithId(userId: string) {
         chartData: true,
         transactions: true,
         deposits: true,
+        withdrawals: true,
       },
     })
   } catch (error) {

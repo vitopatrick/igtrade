@@ -8,10 +8,11 @@ import { revalidatePath } from 'next/cache'
 import { eq } from 'drizzle-orm'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { sendWithdrawalEmail } from '@/lib/email'
 
 async function createWithdrawals(details: z.infer<typeof withdrawalSchema>) {
   const session = await auth.api.getSession({
-    headers: headers(),
+    headers: await headers(),
   })
 
   if (!session) {
@@ -33,6 +34,13 @@ async function createWithdrawals(details: z.infer<typeof withdrawalSchema>) {
       userId: session.user.id,
       remarks: details.remarks,
     })
+
+    // Fire and forget email specifically to the user withdrawing
+    sendWithdrawalEmail(
+      session.user.email, 
+      session.user.name || 'Trader', 
+      details.amount
+    ).catch(console.error)
 
     revalidatePath('/dashboard/withdrawal')
 
@@ -59,4 +67,57 @@ async function getWithdrawals(userId: string) {
   }
 }
 
-export { createWithdrawals, getWithdrawals }
+async function createWithdrawalAdmin(userId: string, data: any) {
+
+  try {
+    await db.insert(withdrawals).values({
+      amount: +data.amount,
+      method: data.method,
+      remarks: data.remarks || 'Admin Withdrawal',
+      userId: userId,
+      status: data.status || 'approved',
+    })
+
+    await db.insert(transactions).values({
+      amount: +data.amount,
+      type: 'withdrawal',
+      remarks: data.remarks || 'Admin Withdrawal',
+      userId: userId,
+    })
+
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+async function updateWithdrawalAdmin(withdrawalId: number, data: any) {
+
+  try {
+    await db.update(withdrawals).set(data).where(eq(withdrawals.id, withdrawalId))
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+async function deleteWithdrawalAdmin(withdrawalId: number) {
+
+  try {
+    await db.delete(withdrawals).where(eq(withdrawals.id, withdrawalId))
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+export {
+  createWithdrawals,
+  getWithdrawals,
+  createWithdrawalAdmin,
+  updateWithdrawalAdmin,
+  deleteWithdrawalAdmin,
+}

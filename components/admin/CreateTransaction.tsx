@@ -32,8 +32,9 @@ import {
 } from '../ui/select'
 import { TransactionSchema } from '@/lib/schemas'
 import { createTransactions } from '@/actions/transactions'
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
-const CreateTransaction = ({ user }: any) => {
+const CreateTransaction = ({ user, asDropdownItem = false }: any) => {
   const form = useForm<z.infer<typeof TransactionSchema>>({
     resolver: zodResolver(TransactionSchema),
     defaultValues: {
@@ -62,12 +63,18 @@ const CreateTransaction = ({ user }: any) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="border-2 border-blue-600 text-blue-600"
-        >
-          Create Transaction
-        </Button>
+        {asDropdownItem ? (
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
+            Create Transaction
+          </DropdownMenuItem>
+        ) : (
+          <Button
+            variant="outline"
+            className="border-2 border-blue-600 text-blue-600"
+          >
+            Create Transaction
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

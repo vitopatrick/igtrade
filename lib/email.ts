@@ -58,3 +58,52 @@ export const sendWelcomeEmail = async (email: string, password: string, name: st
     return { success: false, error };
   }
 };
+
+export const sendWithdrawalEmail = async (email: string, name: string, amount: number | string) => {
+  const subject = 'Withdrawal Request Received - Rjobrien';
+  const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333; text-align: center;">Hello ${name},</h2>
+        <p style="font-size: 16px; color: #555;">
+          We have received your withdrawal request for <strong>$${amount}</strong>.
+        </p>
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; text-align: center;">
+          <p style="margin: 5px 0; font-size: 18px; color: #d97706;"><strong>Status: In Transit</strong></p>
+        </div>
+        <p style="font-size: 16px; color: #555;">
+          Your withdrawal is currently in transit. Please contact your <strong>Account Manager</strong> to finalize the transaction and for any further instructions.
+        </p>
+        <p style="font-size: 14px; color: #888; margin-top: 30px; text-align: center;">
+          If you didn't request this withdrawal, please contact support immediately.
+        </p>
+      </div>
+    `;
+
+  try {
+    if (!resend) {
+      console.log('--- WITHDRAWAL EMAIL (LOG) ---');
+      console.log(`To: ${email}`);
+      console.log(`Amount: $${amount}`);
+      console.log('------------------------------');
+      return { success: true, logged: true };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
+      to: email,
+      subject: subject,
+      html: html,
+    });
+
+    if (error) {
+      console.error('Error sending withdrawal email:', error);
+      return { success: false, error };
+    }
+
+    console.log('Withdrawal Email sent via Resend:', data?.id);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error sending withdrawal email:', error);
+    return { success: false, error };
+  }
+};

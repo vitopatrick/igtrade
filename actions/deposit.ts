@@ -26,7 +26,7 @@ async function getDeposits(userId: string) {
 
 async function makeDeposit(depositData: z.infer<typeof depositFormSchema>) {
   const session = await auth.api.getSession({
-    headers: headers(),
+    headers: await headers(),
   })
 
   if (!session) {
@@ -59,4 +59,58 @@ async function makeDeposit(depositData: z.infer<typeof depositFormSchema>) {
   }
 }
 
-export { getDeposits, makeDeposit }
+async function createDepositAdmin(userId: string, data: any) {
+
+  try {
+    await db.insert(deposits).values({
+      amount: +data.amount,
+      method: data.method,
+      remarks: data.remarks || 'Admin Deposit',
+      userId: userId,
+      status: data.status || 'approved',
+    })
+
+    // Also add to global transactions if approved or pending? The existing makeDeposit does this.
+    await db.insert(transactions).values({
+      amount: +data.amount,
+      type: 'Deposit',
+      remarks: data.remarks || 'Admin Deposit',
+      userId: userId,
+    })
+
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+async function updateDepositAdmin(depositId: number, data: any) {
+
+  try {
+    await db.update(deposits).set(data).where(eq(deposits.id, depositId))
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+async function deleteDepositAdmin(depositId: number) {
+
+  try {
+    await db.delete(deposits).where(eq(deposits.id, depositId))
+    revalidatePath('/admin/clients')
+    return { success: true }
+  } catch (error) {
+    return { success: false, error }
+  }
+}
+
+export {
+  getDeposits,
+  makeDeposit,
+  createDepositAdmin,
+  updateDepositAdmin,
+  deleteDepositAdmin,
+}

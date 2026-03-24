@@ -24,8 +24,9 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { updateUserBalance } from "@/actions/user";
 import { updateSchema } from "@/lib/schemas";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-const EditDetails = ({ user }: any) => {
+const EditDetails = ({ user, asDropdownItem = false }: any) => {
   const form = useForm<z.infer<typeof updateSchema>>({
     resolver: zodResolver(updateSchema),
     defaultValues: {
@@ -47,7 +48,13 @@ const EditDetails = ({ user }: any) => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Edit Balance</Button>
+          {asDropdownItem ? (
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
+              Edit Balance
+            </DropdownMenuItem>
+          ) : (
+            <Button>Edit Balance</Button>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

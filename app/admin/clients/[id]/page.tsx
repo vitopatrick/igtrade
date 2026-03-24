@@ -1,9 +1,9 @@
 import { getUserWithId } from '@/actions/user'
-import CreateChartData from '@/components/admin/CreateChartData'
-import CreateTransaction from '@/components/admin/CreateTransaction'
-import EditDetails from '@/components/admin/EditDetails'
+import ClientActionsDropdown from '@/components/admin/ClientActionsDropdown'
 import ProfitTable from '@/components/admin/ProfitTable'
 import TransactionsHistory from '@/components/admin/TransactionHistory'
+import AdminDepositsTable from '@/components/admin/AdminDepositsTable'
+import AdminWithdrawalsTable from '@/components/admin/AdminWithdrawalsTable'
 import BonusCard from '@/components/balance-cards/Bonus'
 import DashboardCards from '@/components/balance-cards/DashboardCards'
 import TopAssets from '@/components/balance-cards/TopAssets'
@@ -12,8 +12,10 @@ import EmptyState from '@/components/empty-state/EmptyState'
 export default async function Page({ params }: { params: { id: string } }) {
   const user: any = await getUserWithId(params.id)
 
-  const transactions = user.transactions
-  const chartDetails = user.chartData
+  const transactions = user.transactions || []
+  const chartDetails = user.chartData || []
+  const deposits = user.deposits || []
+  const withdrawals = user.withdrawals || []
 
   return (
     <div>
@@ -28,13 +30,10 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
         <h4>{user.email}</h4>
       </div>
-      {/* balances */}
-      <div className="my-5 space-y-2 ">
-        <div className="flex items-center gap-3">
-          <EditDetails user={user} />
-          <CreateTransaction user={user} />
-          <CreateChartData user={user} />
-        </div>
+      
+      {/* balances & actions */}
+      <div className="my-5 space-y-4">
+        <ClientActionsDropdown user={user} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
           <DashboardCards amount={user.revenue} />
@@ -52,8 +51,13 @@ export default async function Page({ params }: { params: { id: string } }) {
       {/* Trades and transactions */}
       <div className="my-5">
         {user.transactions.length < 1 && <EmptyState />}
-
         {transactions.length > 0 && <TransactionsHistory data={transactions} />}
+      </div>
+
+      {/* Deposits and Withdrawals Manager */}
+      <div className="my-8 space-y-8">
+        <AdminDepositsTable data={deposits} />
+        <AdminWithdrawalsTable data={withdrawals} />
       </div>
     </div>
   )

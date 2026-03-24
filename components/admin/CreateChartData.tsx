@@ -29,8 +29,9 @@ import { format } from 'date-fns'
 import { Calendar } from '../ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { createChartData } from '@/actions/chartData'
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
-export default function CreateChartData({ user }: any) {
+export default function CreateChartData({ user, asDropdownItem = false }: any) {
   const form = useForm<z.infer<typeof profitSchema>>({
     resolver: zodResolver(profitSchema),
   })
@@ -46,9 +47,15 @@ export default function CreateChartData({ user }: any) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="border-2 border-stone-700">
-          Create Chart Profile <CandlestickChart className="mx-2 h-4 w-4" />
-        </Button>
+        {asDropdownItem ? (
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="cursor-pointer">
+            Create Chart Profile <CandlestickChart className="mx-2 h-4 w-4" />
+          </DropdownMenuItem>
+        ) : (
+          <Button variant="outline" className="border-2 border-stone-700">
+            Create Chart Profile <CandlestickChart className="mx-2 h-4 w-4" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
