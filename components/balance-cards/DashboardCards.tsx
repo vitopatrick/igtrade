@@ -46,11 +46,7 @@ export default function DashboardCards({ amount = 0 }: any) {
         <div className="text-3xl font-bold tracking-tight">
           {formatNumber(displayAmount)}
         </div>
-        <div className="flex items-center gap-1 text-xs">
-          <TrendingUp className="w-3 h-3 text-success" />
-          <span className="text-success font-medium">+{trend}%</span>
-          <span className="text-muted-foreground">vs last month</span>
-        </div>
+        
       </CardContent>
     </Card>
   )
