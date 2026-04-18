@@ -1,14 +1,12 @@
 'use client'
 
-import { TrendingUp, TrendingDown, Activity } from 'lucide-react'
+import { Activity } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatNumber } from '@/lib/format'
 import { useEffect, useState } from 'react'
 
 export default function TopAssets({ amount = 0 }: any) {
   const [displayAmount, setDisplayAmount] = useState(0)
-  const trend = -3.2 // Mock trend percentage
-  const isPositive = trend >= 0
 
   useEffect(() => {
     const duration = 1000
@@ -45,22 +43,6 @@ export default function TopAssets({ amount = 0 }: any) {
       <CardContent className="space-y-2">
         <div className="text-3xl font-bold tracking-tight">
           {formatNumber(displayAmount)}
-        </div>
-        <div className="flex items-center gap-1 text-xs">
-          {isPositive ? (
-            <TrendingUp className="w-3 h-3 text-success" />
-          ) : (
-            <TrendingDown className="w-3 h-3 text-destructive" />
-          )}
-          <span
-            className={`font-medium ${
-              isPositive ? 'text-success' : 'text-destructive'
-            }`}
-          >
-            {isPositive ? '+' : ''}
-            {trend}%
-          </span>
-          <span className="text-muted-foreground">vs last month</span>
         </div>
       </CardContent>
     </Card>
