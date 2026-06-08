@@ -31,15 +31,18 @@ import {
   SelectValue,
 } from '../ui/select'
 import { makeDeposit } from '@/actions/deposit'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { addresses } from '@/lib/address'
-import { Copy, CheckCircle2, Loader2, Bitcoin, Wallet } from 'lucide-react'
+import { Copy, CheckCircle2, Loader2, Bitcoin, Wallet, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '../ui/badge'
+import QRCode from 'qrcode'
 
 const DepositForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const form = useForm<z.infer<typeof depositFormSchema>>({
     resolver: zodResolver(depositFormSchema),
@@ -80,11 +83,50 @@ const DepositForm = () => {
         (address) => address.method === value.method,
       )
       setSelected(selectedCoin)
+      
+      // Generate QR code when address is selected
+      if (selectedCoin?.address) {
+        generateQRCode(selectedCoin.address)
+      } else {
+        setQrCodeUrl('')
+      }
     })
 
     // return clean up function
     return () => subscription.unsubscribe()
   }, [selected, form.watch('method'), form])
+
+  // Generate QR code
+  const generateQRCode = async (address: string) => {
+    try {
+      const url = await QRCode.toDataURL(address, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#FFFFFF',
+        },
+      })
+      setQrCodeUrl(url)
+    } catch (error) {
+      console.error('Error generating QR code:', error)
+      toast.error('Failed to generate QR code')
+    }
+  }
+
+  // Download QR code
+  // const downloadQRCode = () => {
+  //   if (!qrCodeUrl || !selected) return
+    
+  //   const link = document.createElement('a')
+  //   link.download = `${selected.method}-wallet-qr.png`
+  //   link.href = qrCodeUrl
+  //   link.click()
+    
+  //   toast.success('QR code downloaded!', {
+  //     description: 'QR code saved to your downloads',
+  //   })
+  // }
 
   // copy address
   const copyAddress = (address: string) => {
@@ -97,17 +139,14 @@ const DepositForm = () => {
   }
 
   const getCryptoIcon = (method: string) => {
-    switch (method) {
-      case 'btc':
-        return '₿'
-      case 'eth':
-        return 'Ξ'
-      case 'usdt':
-      case 'trc20':
-        return '₮'
-      default:
-        return '💰'
-    }
+    const methodLower = method.toLowerCase()
+    if (methodLower.includes('btc')) return '₿'
+    if (methodLower.includes('eth')) return 'Ξ'
+    if (methodLower.includes('usdt') || methodLower.includes('trc20') || methodLower.includes('erc20')) return '₮'
+    if (methodLower.includes('solana') || methodLower.includes('sol')) return '◎'
+    if (methodLower.includes('bnb')) return 'Ⓑ'
+    if (methodLower.includes('ada') || methodLower.includes('cardano')) return '₳'
+    return '💰'
   }
 
   return (
@@ -186,30 +225,16 @@ const DepositForm = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="btc">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">₿</span>
-                              Bitcoin (BTC)
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="eth">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">Ξ</span>
-                              Ethereum (ETH)
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="usdt">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">₮</span>
-                              USDT (ERC20)
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="trc20">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">₮</span>
-                              USDT (TRC20)
-                            </div>
-                          </SelectItem>
+                          {addresses.map((address) => (
+                            <SelectItem key={address.method} value={address.method}>
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">
+                                  {getCryptoIcon(address.method)}
+                                </span>
+                                {address.method.toUpperCase()}
+                              </div>
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -236,7 +261,34 @@ const DepositForm = () => {
                   </div>
                 </div>
 
+                {/* QR Code Section */}
+                {qrCodeUrl && (
+                  <div className="flex flex-col items-center gap-3 p-4 bg-background rounded-md border">
+                    <div className="relative">
+                      <img 
+                        src={qrCodeUrl} 
+                        alt="Wallet QR Code" 
+                        className="w-48 h-48 rounded-md"
+                      />
+                    </div>
+                    {/* <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={downloadQRCode}
+                      className="gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download QR Code
+                    </Button> */}
+                    <p className="text-xs text-center text-muted-foreground">
+                      Scan this QR code with your crypto wallet
+                    </p>
+                  </div>
+                )}
+
                 <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">Or copy the address:</p>
                   <div className="flex items-center gap-2 p-3 bg-background rounded-md border">
                     <code className="flex-1 text-xs break-all font-mono">
                       {selected?.address}
