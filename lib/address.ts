@@ -1,18 +1,22 @@
 export const addresses = [
   {
     method: "btc",
-    address: "bc1qz7p9xvpavtzqt7dqtcedltwxhz4jeh97jvdpqk",
+    address: "bc1qqaa6hqhk2w7um0tg4aeq76aztpffqek3v3lvqu",
   },
   {
     method: "eth",
-    address: "0x7c323DFf5307c45E2F21bc0C3B08eAF26064110A",
+    address: "0x0F7CB3dD7Cc2a2B2C59f5EB99Afdc1b7b559ab79",
   },
   {
-    method: "usdt",
-    address: "0x7c323DFf5307c45E2F21bc0C3B08eAF26064110A",
+    method: "usdt erc20",
+    address: "0x0F7CB3dD7Cc2a2B2C59f5EB99Afdc1b7b559ab79",
   },
   {
-    method: "trc20",
-    address: "TDN5oN4Hk62DZsLhLWD67ZT7tNwSwPD34A",
+    method: "usdt trc20",
+    address: "TNv66Fy4gz4VoYNYgZ8cRRQXuu7HzZt39y",
+  },
+  {
+    method: "Solana",
+    address: "3LnyDAn1XtTTQPb4WuspD3GztGrDRCTycevcqVw5RRR2",
   },
 ];
