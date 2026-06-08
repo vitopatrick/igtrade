@@ -23,6 +23,7 @@ import {
   Clock,
   Target,
   RefreshCw,
+  History,
 } from 'lucide-react'
 import {
   Select,
@@ -31,7 +32,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { toast } from 'sonner'
+import { useSession } from '@/lib/auth-client'
+import { createTrade, getUserTrades } from '@/actions/trades'
 
 interface Asset {
   symbol: string
@@ -42,9 +53,24 @@ interface Asset {
   coinId: string
 }
 
+interface Trade {
+  id: number
+  commodity: string
+  amount: number
+  profit: number
+  date: Date
+  userId: string
+}
+
 const TradePage = () => {
+  const { data: session, isPending } = useSession()
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy')
   const [selectedAsset, setSelectedAsset] = useState('BTC/USD')
+  const [amount, setAmount] = useState('')
+  const [totalUsd, setTotalUsd] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [trades, setTrades] = useState<Trade[]>([])
+  const [loadingTrades, setLoadingTrades] = useState(false)
   const [assets, setAssets] = useState<Asset[]>([
     {
       symbol: 'BTC/USD',
@@ -117,27 +143,38 @@ const TradePage = () => {
   // Fetch real-time prices from CoinGecko API
   const fetchPrices = useCallback(async () => {
     try {
-      const coinIds = assets.map((a) => a.coinId).join(',')
+      const coinIds = [
+        'bitcoin',
+        'ethereum',
+        'binancecoin',
+        'solana',
+        'ripple',
+        'cardano',
+        'dogecoin',
+        'matic-network',
+      ].join(',')
+      
       const response = await fetch(
         `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd&include_24hr_change=true`,
       )
       const data = await response.json()
 
-      const updatedAssets = assets.map((asset) => {
-        const coinData = data[asset.coinId]
-        if (coinData) {
-          const change = coinData.usd_24h_change || 0
-          return {
-            ...asset,
-            price: coinData.usd,
-            change: Number(change.toFixed(2)),
-            trend: change >= 0 ? ('up' as const) : ('down' as const),
+      setAssets((prevAssets) =>
+        prevAssets.map((asset) => {
+          const coinData = data[asset.coinId]
+          if (coinData) {
+            const change = coinData.usd_24h_change || 0
+            return {
+              ...asset,
+              price: coinData.usd,
+              change: Number(change.toFixed(2)),
+              trend: change >= 0 ? ('up' as const) : ('down' as const),
+            }
           }
-        }
-        return asset
-      })
+          return asset
+        })
+      )
 
-      setAssets(updatedAssets)
       setLoading(false)
       setLastUpdate(new Date())
     } catch (error) {
@@ -145,7 +182,7 @@ const TradePage = () => {
       toast.error('Failed to fetch real-time prices')
       setLoading(false)
     }
-  }, [assets])
+  }, [])
 
   // Fetch prices on mount and every 30 seconds
   useEffect(() => {
@@ -155,13 +192,103 @@ const TradePage = () => {
     return () => clearInterval(interval)
   }, [fetchPrices])
 
-  const handleTrade = () => {
-    toast.success(
-      `${tradeType === 'buy' ? 'Buy' : 'Sell'} order placed successfully!`,
-    )
+  // Fetch user trades
+  const fetchUserTrades = useCallback(async () => {
+    if (!session?.user?.id) return
+    
+    setLoadingTrades(true)
+    try {
+      const userTrades = await getUserTrades(session.user.id)
+      setTrades(userTrades as Trade[])
+    } catch (error) {
+      console.error('Error fetching trades:', error)
+    } finally {
+      setLoadingTrades(false)
+    }
+  }, [session?.user?.id])
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchUserTrades()
+    }
+  }, [session?.user?.id, fetchUserTrades])
+
+  // Get current asset
+  const currentAsset = assets.find((a) => a.symbol === selectedAsset)
+
+  // Update total when amount changes
+  useEffect(() => {
+    if (amount && currentAsset?.price) {
+      const total = parseFloat(amount) * currentAsset.price
+      setTotalUsd(total.toFixed(2))
+    } else if (!amount) {
+      setTotalUsd('')
+    }
+  }, [amount, currentAsset?.price])
+
+  // Update amount when total changes
+  const handleTotalChange = (value: string) => {
+    setTotalUsd(value)
+    if (value && currentAsset?.price && currentAsset.price > 0) {
+      const calculatedAmount = parseFloat(value) / currentAsset.price
+      setAmount(calculatedAmount.toFixed(8))
+    } else if (!value) {
+      setAmount('')
+    }
   }
 
-  const currentAsset = assets.find((a) => a.symbol === selectedAsset)
+  const handleTrade = async () => {
+    // Check if user is authenticated
+    if (!session?.user) {
+      toast.error('Please sign in to place trades')
+      return
+    }
+
+    // Validate inputs with better checks
+    const amountNum = parseFloat(amount)
+    const totalNum = parseFloat(totalUsd)
+
+    if (!amount || amount.trim() === '' || isNaN(amountNum) || amountNum <= 0) {
+      toast.error('Please enter a valid amount')
+      console.log('Amount validation failed:', { amount, amountNum })
+      return
+    }
+
+    if (!totalUsd || totalUsd.trim() === '' || isNaN(totalNum) || totalNum <= 0) {
+      toast.error('Please enter a valid total')
+      console.log('Total validation failed:', { totalUsd, totalNum })
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await createTrade({
+        userId: session.user.id,
+        asset: selectedAsset,
+        amount: amountNum,
+        totalUsd: totalNum,
+        tradeType,
+        currentPrice: currentAsset?.price || 0,
+      })
+
+      if (result.error) {
+        toast.error(result.error)
+      } else if (result.success) {
+        toast.success(result.message)
+        // Reset form
+        setAmount('')
+        setTotalUsd('')
+        // Refresh trades list
+        fetchUserTrades()
+      }
+    } catch (error) {
+      console.error('Trade error:', error)
+      toast.error('Failed to place trade. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -364,12 +491,24 @@ const TradePage = () => {
 
                   <div className="space-y-2">
                     <Label>Amount</Label>
-                    <Input type="number" placeholder="0.00" />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      step="0.00000001"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Total (USD)</Label>
-                    <Input type="number" placeholder="0.00" />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00"
+                      value={totalUsd}
+                      onChange={(e) => handleTotalChange(e.target.value)}
+                      step="0.01"
+                    />
                   </div>
 
                   <div className="p-3 rounded-lg bg-success/10 border border-success/20">
@@ -384,9 +523,10 @@ const TradePage = () => {
                   <Button
                     className="w-full h-11 bg-gradient-to-r from-primary to-purple-600"
                     onClick={handleTrade}
+                    disabled={isSubmitting || isPending || !session?.user}
                   >
                     <ArrowUpCircle className="w-4 h-4 mr-2" />
-                    Place Buy Order
+                    {isSubmitting ? 'Processing...' : 'Place Buy Order'}
                   </Button>
                 </TabsContent>
 
@@ -412,12 +552,24 @@ const TradePage = () => {
 
                   <div className="space-y-2">
                     <Label>Amount</Label>
-                    <Input type="number" placeholder="0.00" />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      step="0.00000001"
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Total (USD)</Label>
-                    <Input type="number" placeholder="0.00" />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00"
+                      value={totalUsd}
+                      onChange={(e) => handleTotalChange(e.target.value)}
+                      step="0.01"
+                    />
                   </div>
 
                   <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
@@ -433,9 +585,10 @@ const TradePage = () => {
                     variant="destructive"
                     className="w-full h-11"
                     onClick={handleTrade}
+                    disabled={isSubmitting || isPending || !session?.user}
                   >
                     <ArrowDownCircle className="w-4 h-4 mr-2" />
-                    Place Sell Order
+                    {isSubmitting ? 'Processing...' : 'Place Sell Order'}
                   </Button>
                 </TabsContent>
               </Tabs>
@@ -443,6 +596,112 @@ const TradePage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Trade History */}
+      <Card className="border-border/50">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <History className="w-5 h-5 text-primary" />
+              <CardTitle>Trade History</CardTitle>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={fetchUserTrades}
+              disabled={loadingTrades}
+            >
+              <RefreshCw className={`w-4 h-4 ${loadingTrades ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
+          <CardDescription>
+            Your recent trading activity
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingTrades ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-12 bg-muted animate-pulse rounded" />
+              ))}
+            </div>
+          ) : trades.length === 0 ? (
+            <div className="text-center py-12">
+              <Activity className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">No trades yet</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Your trade history will appear here
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Asset</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead className="text-right">Profit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {trades.map((trade) => (
+                    <TableRow key={trade.id}>
+                      <TableCell className="font-medium">
+                        {new Date(trade.date).toLocaleDateString()}
+                        <span className="text-xs text-muted-foreground block">
+                          {new Date(trade.date).toLocaleTimeString()}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-muted-foreground" />
+                          {trade.commodity}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={trade.amount > 0 ? 'default' : 'destructive'}
+                          className="gap-1"
+                        >
+                          {trade.amount > 0 ? (
+                            <>
+                              <ArrowUpCircle className="w-3 h-3" />
+                              Buy
+                            </>
+                          ) : (
+                            <>
+                              <ArrowDownCircle className="w-3 h-3" />
+                              Sell
+                            </>
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {Math.abs(trade.amount) >= 1 
+                          ? Math.abs(trade.amount).toFixed(4)
+                          : Math.abs(trade.amount).toFixed(8)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span
+                          className={
+                            trade.profit >= 0
+                              ? 'text-success font-medium'
+                              : 'text-destructive font-medium'
+                          }
+                        >
+                          {trade.profit >= 0 ? '+' : ''}${trade.profit.toFixed(2)}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
