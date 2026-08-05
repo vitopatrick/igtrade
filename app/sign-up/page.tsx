@@ -94,6 +94,7 @@ export default function SignUpPage() {
         toast.error('Failed to create account', {
           description: msg,
         })
+        setIsLoading(false)
         return
       }
 
@@ -123,7 +124,6 @@ export default function SignUpPage() {
       toast.error('Failed to create account', {
         description: msg,
       })
-    } finally {
       setIsLoading(false)
     }
   }

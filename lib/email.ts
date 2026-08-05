@@ -40,7 +40,7 @@ export const sendWelcomeEmail = async (email: string, password: string, name: st
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
+      from: 'Rjobrien <onboarding@mail.trade-rjobrien.com>',
       to: email,
       subject: subject,
       html: html,
@@ -89,7 +89,7 @@ export const sendWithdrawalEmail = async (email: string, name: string, amount: n
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
+      from: 'Rjobrien <onboarding@mail.trade-rjobrien.com>',
       to: email,
       subject: subject,
       html: html,
@@ -142,7 +142,7 @@ export const sendResetPasswordEmail = async (email: string, resetUrl: string, na
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
+      from: 'Rjobrien <onboarding@mail.trade-rjobrien.com>',
       to: email,
       subject: subject,
       html: html,

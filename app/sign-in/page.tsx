@@ -42,6 +42,7 @@ export default function SignInPage() {
         toast.error('Sign in failed', {
           description: msg,
         })
+        setIsLoading(false)
         return
       }
 
@@ -57,7 +58,6 @@ export default function SignInPage() {
       toast.error('Sign in failed', {
         description: msg,
       })
-    } finally {
       setIsLoading(false)
     }
   }
