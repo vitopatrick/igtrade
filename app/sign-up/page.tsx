@@ -29,6 +29,7 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -58,17 +59,22 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMessage('')
 
     if (formData.password !== formData.confirmPassword) {
+      const msg = 'Please make sure both passwords are identical.'
+      setErrorMessage(msg)
       toast.error('Passwords do not match', {
-        description: 'Please make sure both passwords are identical.',
+        description: msg,
       })
       return
     }
 
     if (formData.password.length < 6) {
+      const msg = 'Password must be at least 6 characters long.'
+      setErrorMessage(msg)
       toast.error('Password too short', {
-        description: 'Password must be at least 6 characters long.',
+        description: msg,
       })
       return
     }
@@ -82,17 +88,16 @@ export default function SignUpPage() {
         name: `${formData.firstName} ${formData.lastName}`,
       })
 
-      
-
       if (result.error) {
+        const msg = result.error.message || 'Please try again later.'
+        setErrorMessage(msg)
         toast.error('Failed to create account', {
-          description: result.error.message || 'Please try again later.',
+          description: msg,
         })
         return
       }
 
       // Send welcome email via API route
-   
       fetch('/api/send-welcome-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -113,8 +118,10 @@ export default function SignUpPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (error: any) {
+      const msg = error?.message || 'Please try again later.'
+      setErrorMessage(msg)
       toast.error('Failed to create account', {
-        description: error?.message || 'Please try again later.',
+        description: msg,
       })
     } finally {
       setIsLoading(false)
@@ -148,6 +155,11 @@ export default function SignUpPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center font-medium animate-fade-in">
+                {errorMessage}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">

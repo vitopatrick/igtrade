@@ -29,27 +29,35 @@ function ResetPasswordForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMessage('')
 
     if (!token) {
+      const msg = 'Invalid or missing token. Please request a new password reset link.'
+      setErrorMessage(msg)
       toast.error('Invalid or missing token', {
-        description: 'Please request a new password reset link.',
+        description: msg,
       })
       return
     }
 
     if (password.length < 8) {
+      const msg = 'Password must be at least 8 characters long.'
+      setErrorMessage(msg)
       toast.error('Password too short', {
-        description: 'Password must be at least 8 characters long.',
+        description: msg,
       })
       return
     }
 
     if (password !== confirmPassword) {
+      const msg = 'Please make sure both passwords match.'
+      setErrorMessage(msg)
       toast.error('Passwords do not match', {
-        description: 'Please make sure both passwords match.',
+        description: msg,
       })
       return
     }
@@ -63,10 +71,13 @@ function ResetPasswordForm() {
       })
 
       if (error) {
+        const msg = error.message || 'The reset link may have expired or is invalid.'
+        setErrorMessage(msg)
         toast.error('Failed to reset password', {
-          description: error.message || 'The reset link may have expired or is invalid.',
+          description: msg,
         })
       } else {
+        setErrorMessage('')
         setIsSuccess(true)
         toast.success('Password reset successfully!', {
           description: 'You can now sign in with your new password.',
@@ -76,8 +87,10 @@ function ResetPasswordForm() {
         }, 2000)
       }
     } catch (error: any) {
+      const msg = error?.message || 'Please try again later.'
+      setErrorMessage(msg)
       toast.error('An unexpected error occurred', {
-        description: error?.message || 'Please try again later.',
+        description: msg,
       })
     } finally {
       setIsLoading(false)
@@ -169,6 +182,11 @@ function ResetPasswordForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {errorMessage && (
+          <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center font-medium animate-fade-in">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="password">New Password</Label>

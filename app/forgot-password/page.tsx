@@ -22,10 +22,12 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setErrorMessage('')
 
     try {
       const redirectTo = `${window.location.origin}/reset-password`
@@ -35,18 +37,23 @@ export default function ForgotPasswordPage() {
       })
 
       if (error) {
+        const msg = error.message || 'Please check your email and try again.'
+        setErrorMessage(msg)
         toast.error('Failed to send reset email', {
-          description: error.message || 'Please check your email and try again.',
+          description: msg,
         })
       } else {
+        setErrorMessage('')
         setEmailSent(true)
         toast.success('Email sent!', {
           description: 'Check your inbox for password reset instructions.',
         })
       }
     } catch (error: any) {
+      const msg = error?.message || 'An unexpected error occurred. Please try again.'
+      setErrorMessage(msg)
       toast.error('Failed to send reset email', {
-        description: error?.message || 'An unexpected error occurred. Please try again.',
+        description: msg,
       })
     } finally {
       setIsLoading(false)
@@ -55,6 +62,7 @@ export default function ForgotPasswordPage() {
 
   const handleResendEmail = async () => {
     setIsLoading(true)
+    setErrorMessage('')
     try {
       const redirectTo = `${window.location.origin}/reset-password`
       const { error } = await forgetPassword({
@@ -63,15 +71,20 @@ export default function ForgotPasswordPage() {
       })
 
       if (error) {
+        const msg = error.message || 'Please try again later.'
+        setErrorMessage(msg)
         toast.error('Failed to resend email', {
-          description: error.message || 'Please try again later.',
+          description: msg,
         })
       } else {
+        setErrorMessage('')
         toast.success('Email resent!', {
           description: 'Check your inbox for the password reset link.',
         })
       }
     } catch (error: any) {
+      const msg = error?.message || 'Failed to resend email'
+      setErrorMessage(msg)
       toast.error('Failed to resend email')
     } finally {
       setIsLoading(false)
@@ -121,6 +134,11 @@ export default function ForgotPasswordPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {errorMessage && (
+                  <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center font-medium animate-fade-in">
+                    {errorMessage}
+                  </div>
+                )}
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email address</Label>

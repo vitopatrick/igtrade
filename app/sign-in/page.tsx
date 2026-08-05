@@ -23,16 +23,27 @@ export default function SignInPage() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setErrorMessage('')
 
     try {
-      await signIn.email({
+      const result = await signIn.email({
         email,
         password,
       })
+
+      if (result.error) {
+        const msg = result.error.message || 'Invalid email or password.'
+        setErrorMessage(msg)
+        toast.error('Sign in failed', {
+          description: msg,
+        })
+        return
+      }
 
       toast.success('Welcome back!', {
         description: 'Redirecting to your dashboard...',
@@ -41,9 +52,10 @@ export default function SignInPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (error: any) {
+      const msg = error?.message || 'Please check your credentials and try again.'
+      setErrorMessage(msg)
       toast.error('Sign in failed', {
-        description:
-          error?.message || 'Please check your credentials and try again.',
+        description: msg,
       })
     } finally {
       setIsLoading(false)
@@ -77,6 +89,11 @@ export default function SignInPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center font-medium animate-fade-in">
+                {errorMessage}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
