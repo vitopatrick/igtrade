@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/card'
 import { ArrowLeft, Loader2, Mail, TrendingUp, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
+import { forgetPassword } from '@/lib/auth-client'
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
@@ -27,17 +28,25 @@ export default function ForgotPasswordPage() {
     setIsLoading(true)
 
     try {
-      // TODO: Implement Better Auth password reset functionality
-      // For now, simulating the request
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      setEmailSent(true)
-      toast.success('Email sent!', {
-        description: 'Check your inbox for password reset instructions.',
+      const redirectTo = `${window.location.origin}/reset-password`
+      const { error } = await forgetPassword({
+        email,
+        redirectTo,
       })
+
+      if (error) {
+        toast.error('Failed to send reset email', {
+          description: error.message || 'Please check your email and try again.',
+        })
+      } else {
+        setEmailSent(true)
+        toast.success('Email sent!', {
+          description: 'Check your inbox for password reset instructions.',
+        })
+      }
     } catch (error: any) {
       toast.error('Failed to send reset email', {
-        description: error?.message || 'Please check your email and try again.',
+        description: error?.message || 'An unexpected error occurred. Please try again.',
       })
     } finally {
       setIsLoading(false)
@@ -47,11 +56,22 @@ export default function ForgotPasswordPage() {
   const handleResendEmail = async () => {
     setIsLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      toast.success('Email resent!', {
-        description: 'Check your inbox for the password reset link.',
+      const redirectTo = `${window.location.origin}/reset-password`
+      const { error } = await forgetPassword({
+        email,
+        redirectTo,
       })
-    } catch (error) {
+
+      if (error) {
+        toast.error('Failed to resend email', {
+          description: error.message || 'Please try again later.',
+        })
+      } else {
+        toast.success('Email resent!', {
+          description: 'Check your inbox for the password reset link.',
+        })
+      }
+    } catch (error: any) {
       toast.error('Failed to resend email')
     } finally {
       setIsLoading(false)

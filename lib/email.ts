@@ -107,3 +107,57 @@ export const sendWithdrawalEmail = async (email: string, name: string, amount: n
     return { success: false, error };
   }
 };
+
+export const sendResetPasswordEmail = async (email: string, resetUrl: string, name?: string) => {
+  const subject = 'Reset Your Password - Rjobrien';
+  const displayName = name ? ` ${name}` : '';
+  const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333; text-align: center;">Reset Your Password${displayName}</h2>
+        <p style="font-size: 16px; color: #555;">
+          We received a request to reset your password for your Rjobrien account. Click the button below to set a new password:
+        </p>
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="${resetUrl}" style="display: inline-block; padding: 12px 30px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">Reset Password</a>
+        </div>
+        <p style="font-size: 14px; color: #555;">
+          If the button doesn't work, copy and paste this link into your browser:
+        </p>
+        <p style="font-size: 14px; color: #2563eb; word-break: break-all;">
+          <a href="${resetUrl}">${resetUrl}</a>
+        </p>
+        <p style="font-size: 14px; color: #888; margin-top: 30px; text-align: center;">
+          If you didn't request a password reset, you can safely ignore this email.
+        </p>
+      </div>
+    `;
+
+  try {
+    if (!resend) {
+      console.log('--- RESET PASSWORD EMAIL (DEVELOPMENT LOG) ---');
+      console.log(`To: ${email}`);
+      console.log(`Reset URL: ${resetUrl}`);
+      console.log('-----------------------------------------------');
+      return { success: true, logged: true };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: 'Rjobrien <onboarding@mail.rjobrienhub.org>',
+      to: email,
+      subject: subject,
+      html: html,
+    });
+
+    if (error) {
+      console.error('Error sending reset password email via Resend:', error);
+      return { success: false, error };
+    }
+
+    console.log('Reset Password Email sent via Resend:', data?.id);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error sending reset password email:', error);
+    return { success: false, error };
+  }
+};
+
